@@ -24,7 +24,7 @@ class ModelCardWrapper():
 		elif file_path:
 			Validator.Validate(file_path, "str")
 			with open(file_path, "r") as file:
-				self.model_card = ModelCard(**json.load(file_path))
+				self.model_card = ModelCard(**json.load(file))
 
 	def GetModelCard(self) -> ModelCard:
 		return self.model_card
@@ -48,7 +48,7 @@ class ModelCardWrapper():
 		elif file_path:
 			Validator.Validate(file_path, "str")
 			with open(file_path, "r") as file:
-				self.model_card.ai_model = AIModel(**json.load(file_path))
+				self.model_card.ai_model = AIModel(**json.load(file))
 
 	def UpdateBiasAnalysis(self, inputs:dict={}, bias_analysis:BiasAnalysis=None, file_path:str=""):
 		# raise error if no parameters are given

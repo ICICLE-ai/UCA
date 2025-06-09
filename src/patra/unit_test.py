@@ -125,42 +125,96 @@ class TestValidatorClass(unittest.TestCase):
 		with self.assertRaises(TypeError):
 			Validator.Validate(["a","b","c",5,"d"], "list[str]")
 
-class TestAIModelWrapperClass(unittest.TestCase):
-	def test_no_init_parameters():
+class TestModelCardWrapperClass(unittest.TestCase):
+	def test_model_card_wrapper_no_init_parameters(self):
 		with self.assertRaises(ValueError):
-			mc = AIModelWrapper()
+			model_card_wrapper = ModelCardWrapper()
 
-	def test_bad_init_inputs_type():
+	def test_model_card_wrapper_bad_init_inputs_type(self):
 		with self.assertRaises(TypeError):
-			mc = AIModelWrapper(inputs=[])
-
-	def test_bad_init_ai_model_type():
+			model_card_wrapper = ModelCardWrapper(inputs=["a","b","c"])
+	
+	def test_model_card_wrapper_bad_init_model_card_type(self):
 		with self.assertRaises(TypeError):
-			mc = AIModelWrapper(ai_model={})
+			model_card_wrapper = ModelCardWrapper(model_card=[1.23, 2.23, 3.23])
 
-	def test_bad_init_file_path_type():
+	def test_model_card_wrapper_bad_init_file_path_type(self):
 		with self.assertRaises(TypeError):
-			mc = AIModelWrapper(file_path=123)
+			model_card_wrapper = ModelCardWrapper(file_path=[1,2,3,4])
 
-	def init_ai_model_wrapper_inputs():
+	def test_model_card_wrapper_inputs(self):
+		try:
+			model_card_wrapper = ModelCardWrapper(inputs=ValidModelCardDict())
+			if not hasattr(model_card_wrapper, "model_card"):
+				self.fail("expected 'ai_model' instance variable")
+		except Exception as e:
+			self.fail(f"unexpected error: {e}")
+
+	def test_model_card_wrapper_model_card(self):
+		try:
+			model_card_wrapper = ModelCardWrapper(
+				model_card = ModelCard(**ValidModelCardDict()))
+			if not hasattr(model_card_wrapper, "model_card"):
+				self.fail("expected 'model_card' instance variable")
+		except Exception as e:
+			self.fail("unexpected error: {e}")
+
+	def test_model_card_wrapper_file_path(self):
+		try:
+			model_card_wrapper = ModelCardWrapper(
+				file_path = "src/patra/nfl_game_score_model_card_dict.json")
+			if not hasattr(model_card_wrapper, "model_card"):
+				self.fail("expected 'model_card' instance variable")
+		except Exception as e:
+			self.fail(f"unexpected error: {e}")
+
+	def test_model_card_wrapper_get_model_card(self):
+		model_card_wrapper = ModelCardWrapper(
+			file_path="src/patra/nfl_game_score_model_card_dict.json")
+		if not isinstance(model_card_wrapper.GetModelCard(), ModelCard):
+			self.fail(f"expected ModelCard type")
+
+
+class TestAIModelWrapperClass(unittest.TestCase):
+	def test_ai_model_wrapper_no_init_parameters(self):
+		with self.assertRaises(ValueError):
+			ai_model_wrapper = AIModelWrapper()
+
+	def test_ai_model_wrapper_bad_init_inputs_type(self):
+		with self.assertRaises(TypeError):
+			ai_model_wrapper = AIModelWrapper(inputs=[1.23, 2.23, 3.23])
+
+	def test_ai_model_wrapper_bad_init_ai_model_type(self):
+		with self.assertRaises(TypeError):
+			ai_model_wrapper = AIModelWrapper(ai_model={"a":1,"b":2,"c":3})
+
+	def test_ai_model_wrapper_bad_init_file_path_type(self):
+		with self.assertRaises(TypeError):
+			ai_model_wrapper = AIModelWrapper(file_path=123)
+
+	def init_ai_model_wrapper_inputs(self):
 		try:
 			ai_model_wrapper = AIModelWrapper(inputs=ValidAIModelDict())
-			if not hasattr(ai_model_wrapper, 'ai_model'):
+			if not hasattr(ai_model_wrapper, "ai_model"):
 				self.fail("expected 'ai_model' instance variable")
-		except:
+		except Exception as e:
 			self.fail(f"unexpected error: {e}")
 
-	def init_ai_model_wrapper_ai_model():
+	def init_ai_model_wrapper_ai_model(self):
 		try:
 			ai_model_wrapper = AIModelWrapper(ai_model = AIModel(**ValidAIModelDict()))
-			if not hasattr(ai_model_wrapper, 'ai_model'):
+			if not hasattr(ai_model_wrapper, "ai_model"):
 				self.fail("expected 'ai_model' instance variable")
-		except:
+		except Exception as e:
 			self.fail(f"unexpected error: {e}")
 
-	def init_ai_model_wrapper_file_path():
-		# must implement this
-		pass
+	def init_ai_model_wrapper_file_path(self):
+		try:
+			ai_model_wrapper = AIModelWrapper(file = "nfl_game_score_ai_model_dict.json")
+			if not hasattr(ai_model_wrapper, "ai_model"):
+				self.fail("expected 'ai_model' instance variable")
+		except Exception as e:
+			self.fail(f"unexpected error: {e}")
 
 def ValidModelCardDict() -> dict:
 	return {
