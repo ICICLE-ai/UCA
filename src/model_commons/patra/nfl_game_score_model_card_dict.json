@@ -1,0 +1,13 @@
+{
+    "name": "game score model",
+    "version": "1.0",
+    "short_description": "model to predict nfl game score",
+    "full_description": "mlp model to predict nfl game score",
+    "keywords": "nfl, nas, hill climb",
+    "author": "nick cliffel",
+    "input_type": "tabular",
+    "category": "real-life",
+    "input_data": "team averages",
+    "output_data": "home team points - away team points",
+    "foundational_model": "None"
+}

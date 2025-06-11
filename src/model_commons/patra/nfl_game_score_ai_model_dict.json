@@ -1,0 +1,11 @@
+{
+    "name": "game_score",
+    "version": "1.0",
+    "description": "model to predict nfl game score",
+    "owner": "nick cliffel",
+    "location": "sports/Models/nfl_game_score.h5",
+    "license": "MIT",
+    "framework": "pytorch",
+    "model_type": "regressor",
+    "test_accuracy": "10.20810866355896"
+}
