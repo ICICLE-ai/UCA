@@ -3,8 +3,8 @@ from patra_toolkit.patra_model_card import AIModel
 from patra_toolkit.patra_model_card import BiasAnalysis
 from patra_toolkit.patra_model_card import ExplainabilityAnalysis
 from patra_toolkit.patra_model_card import Metric
-from src.patra.validator import Validator
-from src.patra.ai_model_wrapper import AIModelWrapper
+from src.model_commons.patra.validator import Validator
+from src.model_commons.patra.ai_model_wrapper import AIModelWrapper
 import json
 
 class ModelCardWrapper():

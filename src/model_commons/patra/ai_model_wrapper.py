@@ -1,5 +1,6 @@
 from patra_toolkit.patra_model_card import AIModel
-from src.patra.validator import Validator
+from src.model_commons.patra.validator import Validator
+import json
 
 class AIModelWrapper():
 	def __init__(self, inputs:dict={}, ai_model:AIModel=None, file_path:str=""):
@@ -14,9 +15,9 @@ class AIModelWrapper():
 			Validator.Validate(inputs, "dict")
 			self.ai_model = AIModel(**inputs)
 		elif file_path:
-			Validator.Validate(inputs, "str")
+			Validator.Validate(file_path, "str")
 			with open(file_path, "r") as file:
-				self.ai_model = AIModel(**json.load(file_path))
+				self.ai_model = AIModel(**json.load(file))
 
 	def GetAIModel(self) -> AIModel:
 		return self.ai_model

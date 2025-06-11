@@ -1,5 +1,5 @@
 import requests
-from src.patra.validator import Validator
+from src.model_commons.patra.validator import Validator
 
 
 class MLHubCaller():
