@@ -62,9 +62,14 @@ class AIModelWrapper():
 		Validator.Validate(model_structure, "dict")
 		self.ai_model.model_structure = model_structure
 
-	def UpdateMetrics(self, metrics:dict):
-		Validator.Validate(metrics, "dict")
-		self.ai_model.metrics = metrics
+	def UpdateMetrics(self, metrics:dict={}, key:str="", value:str=""):
+		if not metrics and (not key or not value):
+			raise ValueError("expecting either metrics or key and value")
+		if metrics:
+			Validator.Validate(metrics, "dict")
+			self.ai_model.metrics = metrics
+		else:
+			self.AddMetric(key, value)
 
 	def AddMetric(self, key:str, value:str):
 		Validator.Validate(key, "str")
