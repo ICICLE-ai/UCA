@@ -29,27 +29,22 @@ class ModelCardWrapper():
 	def GetModelCard(self) -> ModelCard:
 		return self.model_card
 
-	def UpdateAIModel(self, inputs:dict={}, ai_model:AIModel=None, file_path:str=""):
+	def UpdateAIModel(self, inputs:dict={}, ai_model:AIModel=None, file_path:str="",
+		ai_model_wrapper:AIModelWrapper=None):
 		# raise error if no parameters are given
-		if not inputs and not ai_model and not file_path:
+		if not inputs and not ai_model and not file_path and not ai_model_wrapper:
 			raise ValueError("no parameters were given")
 		
-		# updating AIModel
+		if ai_model_wrapper:
+			if not isinstance(ai_model_wrapper, AIModelWrapper):
+				raise TypeError("expected AIModelWrapper type")
+			self.model_card.ai_model = ai_model_wrapper.GetAIModel()
+			return
+		
+		# updating ai_model
 		self.model_card.ai_model = AIModelWrapper(inputs=inputs, ai_model=ai_model,
 			file_path=file_path).GetAIModel()
 	
-		# updating AIModel
-		if aiModel:
-			Validator.Validate(ai_model, "AIModel")
-			self.model_card.ai_model = ai_model
-		elif inputs:
-			Validator.Validate(inputs, "dict")
-			self.model_card.ai_model = AIModel(**AIModel)
-		elif file_path:
-			Validator.Validate(file_path, "str")
-			with open(file_path, "r") as file:
-				self.model_card.ai_model = AIModel(**json.load(file))
-
 	def UpdateBiasAnalysis(self, inputs:dict={}, bias_analysis:BiasAnalysis=None, file_path:str=""):
 		# raise error if no parameters are given
 		if not inputs and not bias_analysis and not file_path:
@@ -133,6 +128,12 @@ class ModelCardWrapper():
 	def UpdateModelRequirements(self, model_requirements:list[str]):
 		Validator.Validate(model_requirements, "list[str]")
 		self.model_card.model_requirements = model_requirements
+
+	def UpdateModelStructure(self, trained_model):
+		if self.model_card.ai_model:
+			self.model_card.ai_model.populate_model_structure(trained_model)
+		else:
+			raise ValueError("never set an ai model")
 
 	def PopulateRequirements(self):
 		self.model_card.populate_requirements()
