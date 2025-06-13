@@ -134,6 +134,47 @@ class TestModelCardWrapperClass(unittest.TestCase):
 		except Exception as e:
 			self.fail(f"unexpected error: {e}")
 
+	def test_write_model_to_patra_server_bad_patra_server_url(self):
+		model_card_wrapper = GetModelCardWrapper()
+		with self.assertRaises(TypeError):
+			model_card_wrapper.WriteModelToPatraServer(123)
 
-def GetModelCardWrapper():
+	def test_write_model_to_patra_server_bad_token(self):
+		model_card_wrapper = GetModelCardWrapper()
+		with self.assertRaises(TypeError):
+			model_card_wrapper.WriteModelToPatraServer(GetServerString(), token=[1,2,3])
+
+	def test_write_model_to_patra_server_only_patra_server_url(self):
+		model_card_wrapper = GetModelCardWrapper()
+		model_card_wrapper.UpdateAIModel(ai_model_wrapper=GenericAIModelWrapper())
+		model = torch.load("src/model_commons/patra/nfl_game_score.pth", weights_only=False)
+		model_card_wrapper.UpdateModelStructure(model)
+		try:
+			response_dict = model_card_wrapper.WriteModelToPatraServer(GetServerString())
+			print(type(response_dict))
+			for value in response_dict:
+				print(value)
+		except Exception as e:
+			self.fail(f"unexpected error: {e}")
+
+	def test_write_model_to_file_bad_file_location(self):
+		model_card_wrapper = GetModelCardWrapper()
+		with self.assertRaises(TypeError):
+			model_card_wrapper.WriteToFile(file_location={"a":1,"b":2})
+
+	def test_write_model_to_file(self):
+		model_card_wrapper = GetModelCardWrapper()
+		model_card_wrapper.UpdateAIModel(ai_model_wrapper=GenericAIModelWrapper())
+		model = torch.load("src/model_commons/patra/nfl_game_score.pth", weights_only=False)
+		model_card_wrapper.UpdateModelStructure(model)
+		try:
+			model_card_wrapper.WriteToFile(file_location=
+				"src/model_commons/patra/nfl_game_score_model_card_write_test.json")
+		except Exception as e:
+			self.fail(f"unexpected error: {e}")	
+	
+def GetModelCardWrapper() -> ModelCardWrapper:
 	return ModelCardWrapper(file_path="src/model_commons/patra/nfl_game_score_model_card_dict.json")
+
+def GetServerString() -> str:
+	return "http://patraserver.pods.icicleai.tapis.io"

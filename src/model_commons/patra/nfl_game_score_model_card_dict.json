@@ -6,8 +6,8 @@
     "keywords": "nfl, nas, hill climb",
     "author": "nick cliffel",
     "input_type": "tabular",
-    "category": "real-life",
-    "input_data": "team averages",
-    "output_data": "home team points - away team points",
+    "category": "regression",
+    "input_data": "https://archive.ics.uci.edu/dataset/2/adult",
+    "output_data": "https://huggingface.co/Data-to-Insight-Center/UCI-Adult",
     "foundational_model": "None"
 }

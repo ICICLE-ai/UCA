@@ -180,7 +180,12 @@ class ModelCardWrapper():
 		# writing to file
 		self.model_card.save(file_location)
 
-	def WriteModelToPatraServer(self, patra_server_url:str, token:str=None) -> dict:
+	def WriteModelToPatraServer(self, patra_server_url:str, token:str="") -> dict:
+		# validating inputs
+		
+		Validator.Validate(patra_server_url, "str")
+		if token: Validator.Validate(token, "str")
+
 		# validating model card before submitting to server
 		self.model_card.validate()
 		# submitting model card to server

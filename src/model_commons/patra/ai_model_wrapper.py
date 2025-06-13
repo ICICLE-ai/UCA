@@ -54,8 +54,8 @@ class AIModelWrapper():
 		Validator.Validate(model_type, "str")
 		self.ai_model.model_type = model_type
 
-	def UpdateTestAccuracy(self, test_accuracy:str):
-		Validator.Validate(model_type, "str")
+	def UpdateTestAccuracy(self, test_accuracy:float):
+		Validator.Validate(test_accuracy, "number")
 		self.ai_model.test_accuracy = test_accuracy
 
 	def UpdateModelStructure(self, model_structure):
