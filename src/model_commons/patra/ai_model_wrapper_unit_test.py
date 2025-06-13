@@ -78,6 +78,20 @@ class TestAIModelWrapperClass(unittest.TestCase):
 		if not "mse" in ai_model.metrics or ai_model.metrics["mse"] != "170.85015487670898":
 			self.fail("either metric wasn't there or it is not correct")
 
+	def test_ai_model_wrapper_update_test_accuracy_bad_value(self):
+		ai_model_wrapper = GenericAIModelWrapper()
+		with self.assertRaises(TypeError):
+			ai_model_wrapper.UpdateTestAccuracy([])
+
+	def test_ai_model_wrapper_update_test_accuracy_float(self):
+		ai_model_wrapper = GenericAIModelWrapper()
+		try:
+			ai_model_wrapper.UpdateTestAccuracy(1234.5)
+			if ai_model_wrapper.GetAIModel().test_accuracy != 1234.5:
+				self.fail(f"expected 1234.5")
+		except Exception as e:
+			self.fail(f"unexpected error: {e}")
+
 	def test_ai_model_wrapper_update_metrics_no_params(self):
 		ai_model_wrapper = GenericAIModelWrapper()
 		with self.assertRaises(ValueError):
@@ -117,6 +131,118 @@ class TestAIModelWrapperClass(unittest.TestCase):
 			ai_model_wrapper.PopulateModelStructure(model)
 		except Exception as e:
 			self.fail(f"received unexpected error: {e}")
+
+	def test_ai_model_wrapper_update_name_bad(self):
+		ai_model_wrapper = GenericAIModelWrapper()
+		with self.assertRaises(TypeError):
+			ai_model_wrapper.UpdateName({})
+
+	def test_ai_model_wrapper_update_name(self):
+		ai_model_wrapper = GenericAIModelWrapper()
+		try:
+			ai_model_wrapper.UpdateName("new name")
+			if ai_model_wrapper.GetAIModel().name != "new name":
+				self.fail(f"received unexpected name")
+		except Exception as e:
+			self.fail(f"unexpected error: {e}")
+
+	def test_ai_model_update_version_bad(self):
+		ai_model_wrapper = GenericAIModelWrapper()
+		with self.assertRaises(TypeError):
+			ai_model_wrapper.UpdateVersion([])
+
+	def test_ai_model_update_version(self):
+		ai_model_wrapper = GenericAIModelWrapper()
+		try:
+			ai_model_wrapper.UpdateVersion("new version")
+			if ai_model_wrapper.GetAIModel().version != "new version":
+				self.fail(f"received unexpected version")
+		except Exception as e:
+			self.fail(f"unexpected error: {e}")
+
+	def test_ai_model_update_description_bad(self):
+		ai_model_wrapper = GenericAIModelWrapper()
+		with self.assertRaises(TypeError):
+			ai_model_wrapper.UpdateDescription(1234)
+
+	def test_ai_model_update_description(self):
+		ai_model_wrapper = GenericAIModelWrapper()
+		try:
+			ai_model_wrapper.UpdateDescription("new description")
+			if ai_model_wrapper.GetAIModel().description != "new description":
+				self.fail("received an unexpected description")
+		except Exception as e:
+			self.fail(f"unexpected error {e}")
+
+	def test_ai_model_update_owner_bad(self):
+		ai_model_wrapper = GenericAIModelWrapper()
+		with self.assertRaises(TypeError):
+			ai_model_wrapper.UpdateOwner(1234.5)
+
+	def test_ai_model_update_owner(self):
+		ai_model_wrapper = GenericAIModelWrapper()
+		try:
+			ai_model_wrapper.UpdateOwner("new owner")
+			if ai_model_wrapper.GetAIModel().owner != "new owner":
+				self.fail("received an unexpected owner")
+		except Exception as e:
+			self.fail("unexpected error: {e}")
+
+	def test_ai_model_update_location_bad(self):
+		ai_model_wrapper = GenericAIModelWrapper()
+		with self.assertRaises(TypeError):
+			ai_model_wrapper.UpdateLocation({})
+
+	def test_ai_model_update_location(self):
+		ai_model_wrapper = GenericAIModelWrapper()
+		try:
+			ai_model_wrapper.UpdateLocation("new loc")
+			if ai_model_wrapper.GetAIModel().location != "new loc":
+				self.fail("received an unexpected location")
+		except Exception as e:
+			self.fail("unexpected error: {e}")
+
+	def test_ai_model_update_license_bad(self):
+		ai_model_wrapper = GenericAIModelWrapper()
+		with self.assertRaises(TypeError):
+			ai_model_wrapper.UpdateLicense([])
+
+	def test_ai_model_update_license(self):
+		ai_model_wrapper = GenericAIModelWrapper()
+		try:
+			ai_model_wrapper.UpdateLicense("new license")
+			if ai_model_wrapper.GetAIModel().license != "new license":
+				self.fail("received an unexpected license")
+		except Exception as e:
+			self.fail("unexpected error: {e}")
+	
+	def test_ai_model_update_framework_bad(self):
+		ai_model_wrapper = GenericAIModelWrapper()
+		with self.assertRaises(TypeError):
+			ai_model_wrapper.UpdateFramework(1234.5)
+
+	def test_ai_model_update_framework(self):
+		ai_model_wrapper = GenericAIModelWrapper()
+		try:
+			ai_model_wrapper.UpdateFramework("tensorflow")
+			if ai_model_wrapper.GetAIModel().framework != "tensorflow":
+				self.fail("received an unexpected framework")
+		except Exception as e:
+			self.fail("unexpected error: {e}")
+
+	def test_ai_model_update_model_type_bad(self):
+		ai_model_wrapper = GenericAIModelWrapper()
+		with self.assertRaises(TypeError):
+			ai_model_wrapper.UpdateModelType({})
+
+	def test_ai_model_update_model_type(self):
+		ai_model_wrapper = GenericAIModelWrapper()
+		try:
+			ai_model_wrapper.UpdateModelType("model type")
+			if ai_model_wrapper.GetAIModel().model_type != "model type":
+				self.fail("received an unexpected framework")
+		except:
+			self.fail("unexpected error: {e}")
 
 def GenericAIModelWrapper() -> AIModelWrapper:
 	return AIModelWrapper(file_path = "src/model_commons/patra/nfl_game_score_ai_model_dict.json")

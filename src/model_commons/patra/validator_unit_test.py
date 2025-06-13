@@ -122,9 +122,29 @@ class TestValidatorClass(unittest.TestCase):
 		with self.assertRaises(TypeError):
 			Validator.Validate({}, "list[str]")
 
+	def test_number_bad_number(self):
+		with self.assertRaises(TypeError):
+			Validator.Validate("", "number")
+
+	def test_number_int(self):
+		try:
+			Validator.Validate(123, "number")
+		except Exception as e:
+			self.fail(f"unexpected error: {e}")
+
+	def test_number_float(self):
+		try:
+			Validator.Validate(1234.5, "number")
+		except Exception as e:
+			self.fail(f"unexpected error: {e}")
+
 	def test_list_of_str_not_str(self):
 		with self.assertRaises(TypeError):
 			Validator.Validate(["a","b","c",5,"d"], "list[str]")
+
+	def test_not_str(self):
+		with self.assertRaises(TypeError):
+			Validator.Validate(123, "str")
 
 def ValidModelCardDict() -> dict:
 	return {
