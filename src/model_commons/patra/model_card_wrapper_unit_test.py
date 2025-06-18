@@ -150,7 +150,7 @@ class TestModelCardWrapperClass(unittest.TestCase):
 		model = torch.load("src/model_commons/patra/nfl_game_score.pth", weights_only=False)
 		model_card_wrapper.UpdateModelStructure(model)
 		try:
-			response_dict = model_card_wrapper.WriteModelToPatraServer(GetServerString())
+			response_dict = model_card_wrapper.WriteModelToPatraServer(GetServerString_2())
 			print(type(response_dict))
 			for value in response_dict:
 				print(value)
@@ -178,3 +178,6 @@ def GetModelCardWrapper() -> ModelCardWrapper:
 
 def GetServerString() -> str:
 	return "http://patraserver.pods.icicleai.tapis.io"
+
+def GetServerString_2() -> str:
+	return "https://ckn.d2i.tacc.cloud/patra/upload_mc"
