@@ -1,0 +1,86 @@
+# TODO: Need to write ReadMe file with end to end explaination
+from pymongo import MongoClient
+from tapipy.tapis import Tapis
+import uuid
+import datetime
+
+from rules_engine_entity import Rule
+from exceptions import RuleEngineError, RuleValidationError, RuleNotFoundError
+from config import Config
+
+class RuleEngineClient:
+    def __init__(
+        self,
+        tapis_url: str = None,
+        tapis_user: str = None,
+        tapis_pass: str = None,
+        mongo_uri: str = None,
+        db_name: str = "IMD_Rule_Engine"
+    ):
+        # Initializing and authenticatingd Tapis client
+        self._tapis = Tapis(
+            base_url=tapis_url or Config.TAPIS_URL,
+            username=tapis_user or Config.TAPIS_USER,
+            password=tapis_pass or Config.TAPIS_PASS
+        )
+        try:
+            self._tapis.get_tokens()
+        except Exception as e:
+            raise RuleEngineError(f"Failed to authenticate to TAPIS: {e}")
+        
+        # MongoDB connection
+        uri = mongo_uri or Config.MONGO_URI
+        if not uri:
+            raise RuleEngineError("`mongo_uri` must be provided")
+        self._db = MongoClient(uri)[db_name]
+
+    def create_rule(self, rule_data: dict) -> str:
+        required = ["CI", "Type", "Services", "Data_Rules"]
+        missing = [f for f in required if f not in rule_data]
+        if missing:
+            raise RuleValidationError(f"Missing required fields: {missing}")
+        if rule_data["Type"] not in ("data", "model"):
+            raise RuleValidationError("`Type` must be 'data' or 'model'")
+        if not isinstance(rule_data["Services"], list):
+            raise RuleValidationError("`Services` must be a list")
+        if not isinstance(rule_data["Data_Rules"], list):
+            raise RuleValidationError("`Data_Rules` must be a list")
+
+        token = self._tapis.access_token.access_token
+        claims = self._tapis.access_token.claims
+
+        data = rule_data.copy()
+        data.update({
+            "TapisToken": token,
+            "TAPIS_UUID": claims.get("sub"),
+            "Tapis_UserName": claims.get("tapis/username")
+        })
+
+        data["Rule_UUID"] = str(uuid.uuid4())
+        data["Active_From"] = datetime.datetime.now(datetime.timezone.utc).isoformat()
+        data.setdefault("Active_To", None)
+
+        self._db.user_rules.insert_one(data)
+        return data["Rule_UUID"]
+
+    def list_rules(self, filter_query: dict = None) -> list[Rule]:
+        cursor = self._db.user_rules.find(filter_query or {})
+        results = []
+        for doc in cursor:
+            doc.pop("_id", None)
+            doc.pop("Model_Rules", None)
+            results.append(Rule(**doc))
+        return results
+
+    def update_rule(self, rule_uuid: str, updates: dict) -> None:
+        res = self._db.user_rules.update_one(
+            {"Rule_UUID": rule_uuid},
+            {"$set": updates}
+        )
+        if res.matched_count == 0:
+            raise RuleNotFoundError(f"Rule {rule_uuid} not found")
+
+    def delete_rule(self, rule_uuid: str) -> None:
+        res = self._db.user_rules.delete_one({"Rule_UUID": rule_uuid})
+        if res.deleted_count == 0:
+            raise RuleNotFoundError(f"Rule {rule_uuid} not found")
