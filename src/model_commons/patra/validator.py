@@ -9,7 +9,7 @@ class Validator():
 	def Validate(var, expec:str):
 		# types checked for
 		types = ["ModelCard","BiasAnalysis","AIModel","ExplainabilityAnalysis","Metric",
-			"str","int","list","dict","list[str]","number"]
+			"str","int","list","dict","list[str]","number","list[int]"]
 		if not expec in types:
 			raise ValueError(f"🛑 '{expec}' is not a supported type")
 	
@@ -48,6 +48,10 @@ class Validator():
 			Validator.Validate(var, "list")
 			for val in var:
 				Validator.Validate(val, "str")
+		if expec == "list[int]":
+			Validator.Validate(var, "list")
+			for val in var:
+				Validator.Validate(val, "int")
 
 	@staticmethod
 	def ErrorMessage(var, expec:str) -> str:

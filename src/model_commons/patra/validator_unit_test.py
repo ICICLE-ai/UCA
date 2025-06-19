@@ -308,6 +308,175 @@ class TestValidatorClass(unittest.TestCase):
 				keys_mandatory_types=man_types, keys_optional=opt_keys,
 				keys_optional_types=opt_types)
 
+	def test_validate_mandatory_dict_keys_wrong_input_dict_type(self):
+		man_keys = ["name","version","short_description"]
+		with self.assertRaises(TypeError):
+			Validator.ValidateMandatoryDictKeys(input_dict=[1,2,3,4],
+				keys_mandatory=man_keys)
+
+	def test_validate_mandatory_dict_keys_wrong_keys_mandatory_type(self):
+		man_keys = {"a":1,"b":2,"c":3}
+		with self.assertRaises(TypeError):
+			Validator.ValidateMandatoryDictKeys(input_dict={"a":1,"b":2},
+				keys_mandatory=man_keys)
+
+	def test_validate_mandatory_dict_keys_empty_input_dict(self):
+		man_keys = ["name","version","short_description"]
+		with self.assertRaises(ValueError):
+			Validator.ValidateMandatoryDictKeys(input_dict={},
+				keys_mandatory=man_keys)
+
+	def test_validate_mandatory_dict_keys_empty_mandatory_keys(self):
+		with self.assertRaises(ValueError):
+			Validator.ValidateMandatoryDictKeys(input_dict={"a":1,"b":2,"c":3},
+				keys_mandatory=[])
+
+	def test_validate_mandatory_dict_keys_pass(self):
+		try:
+			man_keys = ["name","author","input_data"]
+			Validator.ValidateMandatoryDictKeys(input_dict=ValidModelCardDict(),
+				keys_mandatory=man_keys)
+		except Exception as e:
+			self.fail(f"unexpected exception: {e}")
+
+	def test_validate_mandatory_dict_keys_fail(self):
+		man_keys = ["full_description","author","category"]
+		input_dict = ValidModelCardDict()
+		del input_dict["author"]
+		with self.assertRaises(ValueError):
+			Validator.ValidateMandatoryDictKeys(input_dict=input_dict,
+				keys_mandatory=man_keys)
+
+	def test_validate_mandatory_key_types_wrong_input_dict_type(self):
+		man_keys = ["name","author","input_data"]
+		man_types = ["str","str","str"]
+		with self.assertRaises(TypeError):
+			Validator.ValidateMandatoryKeyTypes(input_dict=[1,2,3],
+				keys_mandatory=man_keys, keys_mandatory_types=man_types)
+
+	def test_validate_mandatory_key_types_wrong_keys_mandatory_type(self):
+		man_types = ["str","str","str"]
+		with self.assertRaises(TypeError):
+			Validator.ValidateMandatoryKeyTypes(input_dict=ValidModelCardDict(),
+				keys_mandatory=1234.5, keys_mandatory_types=man_types)
+
+	def test_validate_mandatory_key_types_wrong_keys_mandatory_types_type(self):
+		man_keys = ["name","author","input_data"]
+		with self.assertRaises(TypeError):
+			Validator.ValidateMandatoryKeyTypes(input_dict=ValidModelCardDict(),
+				keys_mandatory=man_keys, keys_mandatory_types={"a":1,"b":2})
+
+	def test_validate_mandatory_key_types_empty_input_dict(self):
+		man_keys = ["name","author","input_data"]
+		man_types = ["str","str","str"]
+		with self.assertRaises(ValueError):
+			Validator.ValidateMandatoryKeyTypes(input_dict={},
+				keys_mandatory=man_keys, keys_mandatory_types=man_types)
+
+	def test_validate_mandatory_key_types_empty_keys_mandatory(self):
+		man_types = ["str","str","str"]
+		with self.assertRaises(ValueError):
+			Validator.ValidateMandatoryKeyTypes(input_dict=ValidModelCardDict(),
+				keys_mandatory=[], keys_mandatory_types=man_types)
+
+	def test_validate_mandatory_key_types_empty_keys_mandatory_types(self):
+		man_keys = ["name","author","input_data"]
+		with self.assertRaises(ValueError):
+			Validator.ValidateMandatoryKeyTypes(input_dict=ValidModelCardDict(),
+				keys_mandatory=man_keys, keys_mandatory_types=[])
+
+	def test_validate_mandatory_key_types_mismatch_lengths(self):
+		man_keys = ["name","author","input_data"]
+		man_types = ["str","str","str","str"]
+		with self.assertRaises(ValueError):
+			Validator.ValidateMandatoryKeyTypes(input_dict=ValidModelCardDict(),
+				keys_mandatory=man_keys, keys_mandatory_types=man_types)
+
+	def test_validate_mandatory_key_types_pass(self):
+		man_keys = ["name","version","output_data"]
+		man_types = ["str","int","list[int]"]
+		working = ValidModelCardDict()
+		working["version"] = 5
+		working["output_data"] = [1,2,3,10,15]
+		try:
+			Validator.ValidateMandatoryKeyTypes(input_dict=working,
+				keys_mandatory=man_keys, keys_mandatory_types=man_types)
+		except Exception as e:
+			self.fail(f"unexpected exception: {e}")
+
+	def test_validate_mandatory_key_types_fail(self):
+		man_keys = ["name","version","output_data"]
+		man_types = ["str","list","str"]
+		with self.assertRaises(TypeError):
+			Validator.ValidateMandatoryKeyTypes(input_dict=ValidModelCardDict(),
+				keys_mandatory=man_keys, keys_mandatory_types=man_types)
+
+	def test_validate_optional_key_types_wrong_input_dict_type(self):
+		opt_keys=["short_description"]
+		opt_types=["str"]
+		with self.assertRaises(TypeError):
+			Validator.ValidateOptionalKeyTypes(input_dict=[],
+				keys_optional=opt_keys, keys_optional_types=opt_types)
+
+	def test_validate_optional_key_types_wrong_keys_optional_type(self):
+		opt_keys = 12345.678
+		opt_types = ["int"]
+		with self.assertRaises(TypeError):
+			Validator.ValidateOptionalKeyTypes(input_dict=ValidModelCardDict(),
+				keys_optional=opt_keys, keys_optional_types=opt_types)
+
+	def test_validate_optional_key_types_wrong_keys_optional_types_type(self):
+		opt_keys = ["name","version"]
+		opt_types = {"str":1,"int":2}
+		with self.assertRaises(TypeError):
+			Validator.ValidateOptionalKeyTypes(input_dict=ValidModelCardDict(),
+				keys_optional=opt_keys, keys_optional_types=opt_types)
+
+	def test_validate_optional_key_types_empty_input_dict(self):
+		opt_keys=["name","version"]
+		opt_types=["str","str"]
+		with self.assertRaises(ValueError):
+			Validator.ValidateOptionalKeyTypes(input_dict={},
+				keys_optional=opt_keys, keys_optional_types=opt_types)
+
+	def test_validate_optional_key_types_empty_keys_optional(self):
+		opt_types=["str","str"]
+		with self.assertRaises(ValueError):
+			Validator.ValidateOptionalKeyTypes(input_dict=ValidModelCardDict(),
+				keys_optional=[], keys_optional_types=opt_types)
+
+	def test_validate_optional_key_types_empty_keys_optional_types(self):
+		opt_keys=["name","version"]
+		with self.assertRaises(ValueError):
+			Validator.ValidateOptionalKeyTypes(input_dict=ValidModelCardDict(),
+				keys_optional=opt_keys, keys_optional_types=[])
+
+	def test_validate_optional_key_types_unequal_lengths(self):
+		opt_keys=["name","version"]
+		opt_types=["str","str","int"]
+		with self.assertRaises(ValueError):
+			Validator.ValidateOptionalKeyTypes(input_dict=ValidModelCardDict(),
+				keys_optional=opt_keys, keys_optional_types=opt_types)
+	
+	def test_validate_optional_key_types_pass(self):
+		working = ValidModelCardDict()
+		working["version"] = 3
+		opt_keys = ["name","version","career"]
+		opt_types = ["str","int","str"]
+		try:
+			Validator.ValidateOptionalKeyTypes(input_dict=working,
+				keys_optional=opt_keys, keys_optional_types=opt_types)
+		except Exception as e:
+			self.fail(f"unexpected exception: {e}")
+
+	def test_validate_optional_key_types_fail(self):
+		working = ValidModelCardDict()
+		working["version"] = 5
+		opt_keys = ["name","version"]
+		opt_types = ["str", "str"]
+		with self.assertRaises(TypeError):
+			Validator.ValidateOptionalKeyTypes(inputDict=working,
+				keys_optional=opt_keys, keys_optional_types=opt_types)
 
 def ValidModelCardDict() -> dict:
 	return {
