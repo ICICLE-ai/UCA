@@ -12,7 +12,7 @@ import torch
 class TestValidatorClass(unittest.TestCase):
 	def test_error_message(self):
 		s1 = Validator.ErrorMessage("123", "int")
-		s2 = "expected type 'int' got type '<class 'str'>'"
+		s2 = "🛑 expected type 'int' got type '<class 'str'>'"
 		self.assertEquals(s1, s2)
 
 	def test_not_supported_type(self):
@@ -145,6 +145,169 @@ class TestValidatorClass(unittest.TestCase):
 	def test_not_str(self):
 		with self.assertRaises(TypeError):
 			Validator.Validate(123, "str")
+
+	def test_validate_dict_input_dict_wrong_type(self):
+		with self.assertRaises(TypeError):
+			Validator.ValidateDict(input_dict=123, keys_mandatory=["a"])
+
+	def test_validate_dict_keys_mandatory_wrong_type(self):
+		with self.assertRaises(TypeError):
+			Validator.ValidateDict(input_dict={"a":"b"}, keys_mandatory="1234")
+
+	def test_validate_dict_bad_wrong_keys_mandatory_types_type(self):
+		with self.assertRaises(TypeError):
+			Validator.ValidateDict(input_dict={"a":"b"}, keys_manatory=["a","b"],
+				keys_mandatory_types=1234)
+
+	def test_validate_dict_wrong_keys_optional_type(self):
+		with self.assertRaises(TypeError):
+			Validator.ValidateDict(input_dict={"a":"b"}, keys_optional=1234.5,
+				keys_optional_types=["str", "str"])
+
+	def test_validate_dict_empty_input_dict(self):
+		with self.assertRaises(ValueError):
+			Validator.ValidateDict(input_dict={}, keys_mandatory=["a","b"])
+
+	def test_validate_dict_no_params(self):
+		with self.assertRaises(ValueError):
+			Validator.ValidateDict(input_dict={"a":"b"})
+
+	def test_validate_dict_only_keys_optional_types(self):
+		with self.assertRaises(ValueError):
+			Validator.ValidateDict(input_dict={"a":1}, keys_mandatory_types=["str","str"])
+
+	def test_validate_dict_only_keys_optional(self):
+		with self.assertRaises(ValueError):
+			Validator.ValidateDict(input_dict={"a":1}, keys_optional=["a","b"])
+
+	def test_validate_dict_only_keys_optional_types(self):
+		with self.assertRaises(ValueError):
+			Validator.ValidateDict(input_dict={"a":1}, keys_optional_types=["str","str"])
+
+	def test_validate_dict_missing_mandatory_key(self):
+		keys = ["a","b","c","d","e"]
+		working = {}
+		for index in range(len(keys)): working[keys[index]] = index
+		keys.append("f")
+		with self.assertRaises(ValueError):
+			Validator.ValidateDict(input_dict=working, keys_mandatory=keys)
+
+	def test_validate_dict_mandatory_keys(self):
+		keys = ["a","b","c","d","e"]
+		working = {}
+		for index in range(len(keys)): working[keys[index]] = index
+		try:
+			Validator.ValidateDict(input_dict=working, keys_mandatory=keys)
+		except Exception as e:
+			self.fail(f"got unexpected exception {e}")
+
+	def test_validate_dict_keys_mandatory_and_keys_mandatory_types_length_mismatch(self):
+		types = ["int","int","int","int"]
+		keys = ["a","b","c","d","e"]
+		working = {}
+		for index in range(len(keys)): working[keys[index]] = index
+		with self.assertRaises(ValueError):
+			Validator.ValidateDict(input_dict=working, keys_mandatory=keys,
+				keys_mandatory_types=types)
+
+	def test_validate_dict_bad_keys_mandatory_types(self):
+		types = ["int","int","int","str"]
+		keys = ["a","b","c","d"]
+		working = {}
+		for index in range(len(keys)): working[keys[index]] = index
+		with self.assertRaises(TypeError):
+			Validator.ValidateDict(input_dict=working, keys_mandatory=keys,
+				keys_mandatory_types=types)
+
+	def test_validate_dict_mandatory_key_types(self):
+		types = ["str","str","str","str","str","str","str","str","str","str","str"]
+		keys = ["name","version","short_description","full_description","keywords",
+			"author","input_type","category","input_data","output_data",
+			"foundational_model"]
+		print(f"types length: {len(types)}")
+		print(f"keys length: {len(keys)}")
+		try:
+			Validator.ValidateDict(input_dict=ValidModelCardDict(), keys_mandatory=keys,
+				keys_mandatory_types=types)
+		except Exception as e:
+			self.fail(f"got unexpected exception: {e}")
+
+	def test_validate_dict_bad_optional_key_types(self):
+		opt_keys = ["b","c"]
+		opt_types = ["int", "str"]
+		working = {"a":1,"b":2,"c":3,"d":4}
+		with self.assertRaises(TypeError):
+			Validator.ValidateDict(input_dict=working, keys_optional=opt_keys,
+				keys_optional_types=opt_types)
+
+	def test_validate_dict_optional_key_types(self):
+		opt_keys = ["c","d","e"]
+		opt_types = ["int", "str", "list"]
+		working = {
+			"a":5,
+			"b":90.1,
+			"c":5000,
+			"d":"test str",
+			"e":[1,2,34]
+		}
+		try:
+			Validator.ValidateDict(input_dict=working, keys_optional=opt_keys,
+				keys_optional_types=opt_types)
+		except Exception as e:
+			self.fail(f"got unexpected exception: {e}")
+
+	def test_validate_dict_optional_unequal_lengths(self):
+		opt_keys=["a","b","c"]
+		opt_types=["int","int","int","int"]
+		working = {"a":1,"b":2,"c":3,"d":4}
+		with self.assertRaises(ValueError):
+			Validator.ValidateDict(input_dict=working, keys_optional=opt_keys,
+				keys_optional_types=opt_types)
+
+	def test_validate_dict_mandatory_and_opt_keys(self):
+		opt_keys = ["a","b","c"]
+		man_keys = ["k","l","m","n"]
+		working = {}
+		for index in range(len(man_keys)): working[man_keys[index]] = index
+		for index in range(len(opt_keys)): working[opt_keys[index]] = index + 10
+		with self.assertRaises(ValueError):
+			Validator.ValidateDict(input_dict=working, keys_optional=opt_keys)
+
+	def test_validate_dict_mandatory_and_opt_types(self):
+		opt_key_types = ["int","int","int","int"]
+		man_keys = ["k","l","m","n"]
+		working = {}
+		for index in range(len(man_keys)): working[man_keys[index]] = index
+		with self.assertRaises(ValueError):
+			Validator.ValidateDict(input_dict=working, keys_optional_types=opt_key_types)
+
+	def test_validate_dict_everything_together_missing_mandatory(self):
+		man_keys = ["name","version","short_description"]
+		man_types = ["str","str","str"]
+		opt_keys = ["full_description","keywords","author","input_type","category","input_data",
+			"output_data","foundational_model"]
+		opt_types = ["str","str","str","str","str","str","str","str"]
+		working = ValidModelCardDict()
+		del working["short_description"]
+		with self.assertRaises(ValueError):
+			Validator.ValidateDict(input_dict=working, keys_mandatory=man_keys,
+				keys_mandatory_types=man_types, keys_optional=opt_keys,
+				keys_optional_types=opt_types)
+
+	def test_validate_dict_everything_together_wrong_mandatory_type(self):
+		man_keys = ["name","version","short_description"]
+		man_types = ["str","int","str"]
+		opt_keys = ["full_description","keywords","author","input_type","category","input_data",
+			"output_data","foundational_model"]
+		opt_types = ["str","str","str","str","str","str","str","str"]
+		working = ValidModelCardDict()
+		working["version"] = 2
+		working["short_description"] = 4
+		with self.assertRaises(TypeError):
+			Validator.ValidateDict(input_dict=working, keys_mandatory=man_keys,
+				keys_mandatory_types=man_types, keys_optional=opt_keys,
+				keys_optional_types=opt_types)
+
 
 def ValidModelCardDict() -> dict:
 	return {
