@@ -4,9 +4,10 @@ from tapipy.tapis import Tapis
 import uuid
 import datetime
 
-from rules_engine_entity import Rule
-from exceptions import RuleEngineError, RuleValidationError, RuleNotFoundError
-from config import Config
+from model_commons.patra.validator import Validator
+from .rules_engine_entity import Rule
+from .exceptions import RuleEngineError, RuleValidationError, RuleNotFoundError
+from .config import Config
 
 class RuleEngineClient:
     def __init__(
@@ -15,7 +16,7 @@ class RuleEngineClient:
         tapis_user: str = None,
         tapis_pass: str = None,
         mongo_uri: str = None,
-        db_name: str = "IMD_Rule_Engine"
+        db_name: str = "IMT_Rules_engine_database"
     ):
         # Initializing and authenticatingd Tapis client
         self.tapis = Tapis(
@@ -35,31 +36,38 @@ class RuleEngineClient:
         self.db = MongoClient(uri)[db_name]
 
     def create_rule(self, rule_data: dict) -> str:
-        required = ["CI", "Type", "Services", "Data_Rules"]
-        missing = [f for f in required if f not in rule_data]
-        if missing:
-            raise RuleValidationError(f"Missing required fields: {missing}")
+        try:
+            Validator.Validate(rule_data, "dict", error_type=RuleValidationError)
+            Validator.ValidateDict(
+                rule_data,
+                keys_mandatory=["CI", "Type", "Services", "Data_Rules"],
+                keys_mandatory_types=["str", "str", "list", "list"]
+            )
+        except ValueError as ve:
+            raise RuleValidationError(str(ve))
+
+        # TODO: Future work to validate the list types
+        # Validator.Validate(rule_data["Services"],    "list[str]", error_type=RuleValidationError)
+        # Validator.Validate(rule_data["Data_Rules"], "list[dict]", error_type=RuleValidationError)
+
         if rule_data["Type"] not in ("data", "model"):
             raise RuleValidationError("`Type` must be 'data' or 'model'")
-        if not isinstance(rule_data["Services"], list):
-            raise RuleValidationError("`Services` must be a list")
-        if not isinstance(rule_data["Data_Rules"], list):
-            raise RuleValidationError("`Data_Rules` must be a list")
 
-        token = self.tapis.access_token.access_token
+        token  = self.tapis.access_token.access_token
         claims = self.tapis.access_token.claims
 
         data = rule_data.copy()
         data.update({
-            "TapisToken": token,
-            "TAPIS_UUID": claims.get("sub"),
-            "Tapis_UserName": claims.get("tapis/username")
+            "TapisToken":    token,
+            "TAPIS_UUID":    claims.get("sub"),
+            "Tapis_UserName":claims.get("tapis/username")
         })
 
-        data["Rule_UUID"] = str(uuid.uuid4())
+        data["Rule_UUID"]   = str(uuid.uuid4())
         data["Active_From"] = datetime.datetime.now(datetime.timezone.utc).isoformat()
         data.setdefault("Active_To", None)
 
+        # persist and return
         self.db.user_rules.insert_one(data)
         return data["Rule_UUID"]
 

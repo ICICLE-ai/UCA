@@ -5,13 +5,13 @@ import uuid
 import datetime
 from unittest.mock import patch
 
-from rules_engine_client import RuleEngineClient
-from exceptions import (
+from database.rules_engine.rules_engine_client import RuleEngineClient
+from database.rules_engine.exceptions import (
     RuleEngineError,
     RuleValidationError,
     RuleNotFoundError
 )
-from rules_engine_entity import Rule
+from database.rules_engine.rules_engine_entity import Rule
 
 class DummyToken:
     def __init__(self):
@@ -72,8 +72,8 @@ class TestRuleEngineClient(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         # Using Patching for Tapis and MongoClient
-        cls.patcher_tapis = patch('rules_engine_client.Tapis', DummyTapis)
-        cls.patcher_mongo = patch('rules_engine_client.MongoClient', DummyMongoClient)
+        cls.patcher_tapis = patch('database.rules_engine.rules_engine_client.Tapis', DummyTapis)
+        cls.patcher_mongo = patch('database.rules_engine.rules_engine_client.MongoClient', DummyMongoClient)
         cls.patcher_tapis.start()
         cls.patcher_mongo.start()
 
@@ -88,7 +88,7 @@ class TestRuleEngineClient(unittest.TestCase):
             'tapis_user': 'u',
             'tapis_pass': 'p',
             'mongo_uri': 'dummy://',
-            'db_name': 'IMD_Rule_Engine'
+            'db_name': 'IMT_Rule_Engine'
         }
         defaults.update(kwargs)
         return RuleEngineClient(**defaults)
@@ -111,16 +111,34 @@ class TestRuleEngineClient(unittest.TestCase):
 
     def test_create_rule_missing_fields(self):
         client = self.make_client()
-        with self.assertRaisesRegex(RuleValidationError, 'Missing required fields'):
+        with self.assertRaises(RuleValidationError):
             client.create_rule({'CI': 'only_one_field'})
 
     def test_create_and_list_rule(self):
         client = self.make_client()
         data = {
-            'CI': 'cust1',
-            'Type': 'data',
-            'Services': ['s1'],
-            'Data_Rules': [{'op': '==', 'path': '/', 'value': 0}]
+        "CI": "OSC",
+        "Type": "data",
+        "Active_From": "2024-05-06T12:00:00",
+        "Active_To": None,
+        "Services": [
+            "data-label",
+            "model-train"
+        ],
+        "Data_Rules": [
+            {
+            "Folder_Path": "/fs/ess/PAS2271/Gautam/Animal_Ecology/output/old/visualized_images",
+            "Type": "count",
+            "Count": 10000,
+            "Apps": [
+                "<TAPIS_APP_ID_1>",
+                "<TAPIS_APP_ID_2>"
+            ],
+            "Sample_Images": True,
+            "Wait_Manual": True
+            }
+        ],
+        "Model_Rules": []
         }
         rule_uuid = client.create_rule(data)
         self.assertIsInstance(rule_uuid, str)
