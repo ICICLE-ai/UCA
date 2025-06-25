@@ -95,10 +95,10 @@ class TestRuleEngineClient(unittest.TestCase):
 
     def test_init_variants(self):
         cases = [
-            ({}, False),
-            ({'tapis_url': 'u', 'tapis_user': 'u', 'tapis_pass': 'p'}, False),
-            ({'mongo_uri': 'dummy://'}, False),
-            ({'tapis_url': 'u','tapis_user': 'u','tapis_pass': 'p','mongo_uri': 'dummy://'}, False)
+            ({}, True), 
+            ({'tapis_url':'u','tapis_user':'u','tapis_pass':'p'}, True),
+            ({'mongo_uri':'dummy://'}, False), 
+            ({'tapis_url':'u','tapis_user':'u','tapis_pass':'p','mongo_uri':'dummy://'}, False)
         ]
         for params, should_raise in cases:
             with self.subTest(params=params):
