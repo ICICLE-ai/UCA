@@ -4,10 +4,10 @@ from tapipy.tapis import Tapis
 import uuid
 import datetime
 
-from model_commons.patra.validator import Validator
-from .rules_engine_entity import Rule
-from .exceptions import RuleEngineError, RuleValidationError, RuleNotFoundError
-from .config import Config
+from src.model_commons.patra.validator import Validator
+from src.database.rules_engine.rules_engine_entity import Rule
+from src.database.rules_engine.exceptions import RuleEngineError, RuleValidationError, RuleNotFoundError
+from src.database.rules_engine.config import Config
 
 class RuleEngineClient:
     def __init__(

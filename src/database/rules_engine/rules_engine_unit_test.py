@@ -5,13 +5,13 @@ import uuid
 import datetime
 from unittest.mock import patch
 
-from database.rules_engine.rules_engine_client import RuleEngineClient
-from database.rules_engine.exceptions import (
+from src.database.rules_engine.rules_engine_client import RuleEngineClient
+from src.database.rules_engine.exceptions import (
     RuleEngineError,
     RuleValidationError,
     RuleNotFoundError
 )
-from database.rules_engine.rules_engine_entity import Rule
+from src.database.rules_engine.rules_engine_entity import Rule
 
 class DummyToken:
     def __init__(self):
@@ -72,8 +72,8 @@ class TestRuleEngineClient(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         # Using Patching for Tapis and MongoClient
-        cls.patcher_tapis = patch('database.rules_engine.rules_engine_client.Tapis', DummyTapis)
-        cls.patcher_mongo = patch('database.rules_engine.rules_engine_client.MongoClient', DummyMongoClient)
+        cls.patcher_tapis = patch('src.database.rules_engine.rules_engine_client.Tapis', DummyTapis)
+        cls.patcher_mongo = patch('src.database.rules_engine.rules_engine_client.MongoClient', DummyMongoClient)
         cls.patcher_tapis.start()
         cls.patcher_mongo.start()
 
