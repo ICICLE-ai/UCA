@@ -478,6 +478,34 @@ class TestValidatorClass(unittest.TestCase):
 			Validator.ValidateOptionalKeyTypes(inputDict=working,
 				keys_optional=opt_keys, keys_optional_types=opt_types)
 
+	def test_validate_file_exists_bad_file_path_type(self):
+		with self.assertRaises(TypeError):
+			Validator.ValidateFileExists(file_path={"a":1,"b":2})
+
+	def test_validate_file_exists_pass(self):
+		try:
+			Validator.ValidateFileExists("src/model_commons/hugging_face/test_file.txt")
+		except Exception as e:
+			self.fail(f"❌ receivied unexpected exception: {e}")
+
+	def test_validate_file_exists_bad(self):
+		with self.assertRaises(ValueError):
+			Validator.ValidateFileExists("src/model_commons/hugging_face")
+
+	def test_validate_directory_bad_dir_path_type(self):
+		with self.assertRaises(TypeError):
+			Validator.ValidateDirectoryExists(1234.5678)
+
+	def test_validate_directory_exists_pass(self):
+		try:
+			Validator.ValidateDirectoryExists("src/model_commons/hugging_face")
+		except Exception as e:
+			self.fail(f"❌ receivied unexpected exception: {e}")
+
+	def test_validate_directory_exists_bad(self):
+		with self.assertRaises(ValueError):
+			Validator.ValidateDirectoryExists("src/model_commons/hugging_face/test_file.txt")
+
 def ValidModelCardDict() -> dict:
 	return {
 		"name":"game_score",
