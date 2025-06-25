@@ -1,10 +1,30 @@
 from huggingface_hub import hf_hub_download
 from huggingface_hub import snapshot_download
+from huggingface_hub import login
 from huggingface_hub import HfApi
 from src.model_commons.patra.validator import Validator
 
 class Hugging():
 	
+	@staticmethod
+	def Login(token:str="", file_path:str=""):
+		# validating inputs
+		Validator.Validate(token, "str")
+		Validator.Validate(file_path, "str")
+		
+		# throw value error if didn't get any inputs
+		if not token and not file_path:
+			raise ValueError("🛑 expected a 'token' input or a 'file_path' input")
+
+		# logging in
+		if token:
+			login(token=token)
+		else:
+			Validator.ValidateFileExists(file_path)
+			with open(file_path, "r") as file:
+				read_token = file.read().strip()
+				login(token=read_token)
+
 	@staticmethod
 	def DownloadFile(repo_id:str, filename:str, revision:str="", local_dir:str="") -> str:
 		# validating input data types
@@ -82,12 +102,26 @@ class Hugging():
 				revision = revision, local_dir = local_dir)
 
 	@staticmethod
-	def UploadFile(local_file_path:str, repo_file_path:str, repo_id:str, repo_type:str=""):
+	def GetRepoInfo(repo_id:str):
+		Validator.Validate(repo_id, "str")
+		api = HfApi()
+		return api.repo_info(repo_id)
+
+	@staticmethod
+	def UploadFile(local_file_path:str, repo_file_path:str, repo_id:str, repo_type:str="",
+		token:str="", token_file_path:str=""):
 		# validating input data
 		Validator.Validate(local_file_path, "str")
 		Validator.Validate(repo_file_path, "str")
 		Validator.Validate(repo_id, "str")
 		Validator.Validate(repo_type, "str")
+		Validator.Validate(token, "str")
+		Validator.Validate(token_file_path, "str")
+		Validator.ValidateFileExists(local_file_path)		
+
+		# login if given token or token_file_path
+		if token or token_file_path:
+			Hugging.Login(token=token, file_path=token_file_path)
 		
 		# making api call
 		api = HfApi()
@@ -102,7 +136,8 @@ class Hugging():
 
 	@staticmethod
 	def UploadFolder(local_folder_path:str, repo_path:str, repo_id:str, repo_type:str="model",
-		ignore_patterns:list[str]=[], allow_patterns:list[str]=[], delete_patterns:list[str]=[]):
+		ignore_patterns:list[str]=[], allow_patterns:list[str]=[], delete_patterns:list[str]=[],
+		token:str="", token_file_path:str=""):
 		
 		# validating input data
 		Validator.Validate(local_folder_path, "str")
@@ -112,7 +147,13 @@ class Hugging():
 		Validator.Validate(ignore_patterns, "list[str]")
 		Validator.Validate(allow_patterns, "list[str]")
 		Validator.Validate(delete_patterns, "list[str]")
+		Validator.Validate(token, "str")
+		Validator.Validate(token_file_path, "str")
 		
+		# login if token or token_file_path
+		if token or token_file_path:
+			Hugging.Login(token=token, file_path=token_file_path)		
+
 		# making api call
 		api = HfApi()
 		if ignore_patterns and not allow_patterns and not delete_patterns:

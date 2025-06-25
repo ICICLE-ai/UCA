@@ -3,6 +3,7 @@ from patra_toolkit.patra_model_card import AIModel
 from patra_toolkit.patra_model_card import BiasAnalysis
 from patra_toolkit.patra_model_card import ExplainabilityAnalysis
 from patra_toolkit.patra_model_card import Metric
+from pathlib import Path
 
 class Validator():
 	@staticmethod
@@ -153,3 +154,16 @@ class Validator():
 		if keys_optional and keys_optional_types:
 			Validator.ValidateOptionalKeyTypes(input_dict, keys_optional,
 				keys_optional_types)
+
+	@staticmethod
+	def ValidateFileExists(file_path:str):
+		Validator.Validate(file_path, "str")
+		if not Path(file_path).is_file():
+			raise ValueError(f"🛑 expected a file at '{file_path}' but did not find 1")
+
+	@staticmethod
+	def ValidateDirectoryExists(dir_path:str):
+		Validator.Validate(dir_path, "str")
+		if not Path(dir_path).is_dir():
+			raise ValueError(f"🛑 expected a directory at '{dir_path}' but did not find 1")
+		
