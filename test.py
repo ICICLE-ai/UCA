@@ -4,6 +4,7 @@ from src.model_commons.patra.validator_unit_test import TestValidatorClass
 from src.model_commons.patra.ai_model_wrapper_unit_test import TestAIModelWrapperClass
 from src.model_commons.patra.model_card_wrapper_unit_test import TestModelCardWrapperClass
 from src.model_commons.ml_hub.ml_hub_caller_unit_test import TestMLHubCallerClass
+from src.database.rules_engine.rules_engine_unit_test import TestRuleEngineClient
 
 if __name__ == "__main__":
 	# auto resetting colorama color
@@ -31,3 +32,10 @@ if __name__ == "__main__":
 	print(Fore.CYAN + Style.BRIGHT + "running test for ml hub caller class")
 	mlHubCallerTestSuite = unittest.TestLoader().loadTestsFromTestCase(TestMLHubCallerClass)
 	unittest.TextTestRunner(verbosity=2).run(mlHubCallerTestSuite)
+	print()
+
+	# testing the RuleEngineClient class in then src/database/rules_engine/rules_engine_client.py file
+	print(Fore.CYAN + Style.BRIGHT + "running test for rules engine class")
+	rulesEngineTestSuite = unittest.TestLoader().loadTestsFromTestCase(TestRuleEngineClient)
+	unittest.TextTestRunner(verbosity=2).run(rulesEngineTestSuite)
+	print()
