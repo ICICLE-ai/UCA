@@ -212,9 +212,33 @@ class TestHuggingClass(unittest.TestCase):
 			Hugging.UploadFolder(local_folder_path="test", repo_path="test", repo_id="test",
 				delete_patterns=1e-6)
 
+	def test_upload_folder_bad_local_folder_path(self):
+		with self.assertRaises(ValueError):
+			Hugging.UploadFolder(
+				local_folder_path="src/model_commons/hugging_face/temp_test",
+				repo_path="", repo_id=PublicRepoId())
+
 	def test_upload_folder_pass(self):
 		try:
-			NotImplementedError("test_upload_folder_pass not implemented")
+			Hugging.UploadFolder(local_folder_path=LocalFolderPath(),
+				repo_path="", repo_id=PublicRepoId())
+		except Exception as e:
+			self.fail(f"❌ receivied unexpected exception: {e}")
+
+	def test_upload_folder_with_token_file_path_pass(self):
+		try:
+			Hugging.UploadFolder(local_folder_path=LocalFolderPath(),
+				repo_path="", repo_id=PublicRepoId(),
+				token_file_path=TokenFilePath())
+		except Exception as e:
+			self.fail(f"❌ receivied unexpected exception: {e}")
+
+	def test_upload_folder_with_token_pass(self):
+		try:
+			with open(TokenFilePath(), "r") as file: token = file.read().strip()
+			Hugging.UploadFolder(local_folder_path=LocalFolderPath(),
+				repo_path="", repo_id=PublicRepoId(),
+				token=token)
 		except Exception as e:
 			self.fail(f"❌ receivied unexpected exception: {e}")
 
@@ -233,3 +257,6 @@ def PublicRepoId() -> str:
 
 def TokenFilePath() -> str:
 	return "src/model_commons/hugging_face/hugging_face_token.txt"
+
+def LocalFolderPath() -> str:
+	return "src/model_commons/hugging_face/temp_test_dir/"

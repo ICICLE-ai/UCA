@@ -149,7 +149,8 @@ class Hugging():
 		Validator.Validate(delete_patterns, "list[str]")
 		Validator.Validate(token, "str")
 		Validator.Validate(token_file_path, "str")
-		
+		Validator.ValidateDirectoryExists(local_folder_path)	
+	
 		# login if token or token_file_path
 		if token or token_file_path:
 			Hugging.Login(token=token, file_path=token_file_path)		
