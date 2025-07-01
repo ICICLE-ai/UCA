@@ -2,6 +2,8 @@ from huggingface_hub import hf_hub_download
 from huggingface_hub import snapshot_download
 from huggingface_hub import login
 from huggingface_hub import HfApi
+from huggingface_hub import create_repo
+from huggingface_hub import delete_repo
 from src.model_commons.patra.validator import Validator
 
 class Hugging():
@@ -208,3 +210,26 @@ class Hugging():
 			repo_id = repo_id,
 			path_in_repo = repo_path,
 			repo_type = repo_type)
+
+	@staticmethod
+	def CreateRepo(repo_id:str, repo_type:str="", private:bool=False) -> str:
+		# validating inputs
+		Validator.Validate(repo_id, "str")
+		Validator.Validate(repo_type, "str")
+		Validator.Validate(private, "bool")		
+		
+		if repo_type:
+			return create_repo(repo_id, repo_type=repo_type, private=private)
+		return create_repo(repo_id, private=private)
+
+	@staticmethod
+	def DeleteRepo(repo_id:str, repo_type:str=""):
+		# validating inputs
+		Validator.Validate(repo_id, "str")
+		Validator.Validate(repo_type, "str")
+		
+		# deleting repo
+		if repo_type:
+			delete_repo(repo_id, repo_type=repo_type)
+			return
+		delete_repo(repo_id)

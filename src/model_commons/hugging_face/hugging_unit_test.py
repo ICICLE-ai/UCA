@@ -252,8 +252,73 @@ class TestHuggingClass(unittest.TestCase):
 		except Exception as e:
 			self.fail(f"❌ receivied unexpected exception: {e}")
 
+	def test_create_repo_bad_repo_id_type(self):
+		with self.assertRaises(TypeError):
+			Hugging.CreateRepo(repo_id=123445.5)
+
+	def test_create_repo_bad_repo_type_type(self):
+		with self.assertRaises(TypeError):
+			Hugging.CreateRepo(repo_id=PublicRepoId(), repo_type=[1,2,34])
+
+	def test_create_repo_pass(self):
+		try:
+			Hugging.CreateRepo(repo_id=TempRepoId())
+		except Exception as e:
+			self.fail(f"❌ receivied unexpected exception: {e}")
+
+	def test_delete_repo_pass(self):
+		try:
+			Hugging.DeleteRepo(repo_id=TempRepoId())
+		except Exception as e:
+			self.fail(f"❌ receivied unexpected exception: {e}")
+
+	def test_create_pivate_repo_pass(self):
+		try:
+			Hugging.CreateRepo(repo_id=TempPrivateRepoId(), private=True)
+		except Exception as e:
+			self.fail(f"❌ receivied unexpected exception: {e}")
+
+	def test_delete_private_repo_pass(self):
+		try:
+			Hugging.DeleteRepo(repo_id=TempPrivateRepoId())
+		except Exception as e:
+			self.fail(f"❌ receivied unexpected exception: {e}")
+
+	def test_create_dataset_repo(self):
+		try:
+			Hugging.CreateRepo(repo_id=TempDatasetRepoId(), repo_type="dataset")
+		except Exception as e:
+			self.fail(f"❌ receivied unexpected exception: {e}")
+
+	def test_delete_dataset_repo(self):
+		try:
+			Hugging.DeleteRepo(repo_id=TempDatasetRepoId(), repo_type="dataset")
+		except Exception as e:
+			self.fail(f"❌ receivied unexpected exception: {e}")
+
+	def test_create_repo_bad_private_type(self):
+		with self.assertRaises(TypeError):
+			Hugging.CreateRepo(repo_id=PublicRepoId(), private={"a":1,"b":2})
+
+	def test_delete_repo_bad_repo_id_type(self):
+		with self.assertRaises(TypeError):
+			Hugging.DeleteRepo(repo_id=[1,24,4])
+
+	def test_delete_repo_bad_repo_type_type(self):
+		with self.assertRaises(TypeError):
+			Hugging.DeleteRepo(repo_id=PublicRepoId(), repo_type=123.7543)
+
 def PublicRepoId() -> str:
 	return "NickCliffel/PublicUCATestRepo"
+
+def TempRepoId() -> str:
+	return "NickCliffel/TempRepo"
+
+def TempPrivateRepoId() -> str:
+	return "NickCliffel/TempPrivateRepo"
+
+def TempDatasetRepoId() -> str:
+	return "NickCliffel/TempDatasetRepo"
 
 def TokenFilePath() -> str:
 	return "src/model_commons/hugging_face/hugging_face_token.txt"

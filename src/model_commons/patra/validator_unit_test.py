@@ -24,7 +24,7 @@ class TestValidatorClass(unittest.TestCase):
 			mc = ModelCardWrapper(inputs=ValidModelCardDict()).GetModelCard()
 			Validator.Validate(mc,"ModelCard")
 		except Exception as e:
-			self.fail(f"unexpected exception: {e}")
+			self.fail(f"❌ unexpected exception: {e}")
 
 	def test_model_card_wrong(self):
 		with self.assertRaises(TypeError):
@@ -34,7 +34,7 @@ class TestValidatorClass(unittest.TestCase):
 		try:
 			Validator.Validate(BiasAnalysis(**ValidBiasAnalysisDict()), "BiasAnalysis")
 		except Exception as e:
-			self.fail(f"unexpected exception {e}")
+			self.fail(f"❌ unexpected exception {e}")
 
 	def test_bias_analysis_wrong(self):
 		with self.assertRaises(TypeError):
@@ -45,7 +45,7 @@ class TestValidatorClass(unittest.TestCase):
 			ai_model = AIModelWrapper(inputs=ValidAIModelDict()).GetAIModel()
 			Validator.Validate(ai_model, "AIModel")
 		except Exception as e:
-			self.fail(f"unexpected exception: {e}")
+			self.fail(f"❌ unexpected exception: {e}")
 
 	def test_ai_model_wrong(self):
 		with self.assertRaises(TypeError):
@@ -56,7 +56,7 @@ class TestValidatorClass(unittest.TestCase):
 			Validator.Validate(ExplainabilityAnalysis(**ValidExplainabilityAnalysisDict()),
 				"ExplainabilityAnalysis")
 		except Exception as e:
-			self.fail(f"unexpected exception: {e}")
+			self.fail(f"❌ unexpected exception: {e}")
 
 	def test_explainability_analysis_wrong(self):
 		with self.assertRaises(TypeError):
@@ -66,85 +66,75 @@ class TestValidatorClass(unittest.TestCase):
 		try:
 			Validator.Validate(Metric(**ValidMetricDict()), "Metric")
 		except Exception as e:
-			self.fail(f"unexpected exception: {e}")
+			self.fail(f"❌ unexpected exception: {e}")
 
 	def test_metric_wrong(self):
-		with self.assertRaises(TypeError):
-			Validator.Validate(1, "Metric")
+		with self.assertRaises(TypeError): Validator.Validate(1, "Metric")
 
 	def test_str_correct(self):
-		try:
-			Validator.Validate("string", "str")
-		except Exception as e:
-			self.fail(f"unexpected error: {e}")
+		try: Validator.Validate("string", "str")
+		except Exception as e: self.fail(f"❌ unexpected error: {e}")
+	
+	def test_valdate_bool_wrong(self):
+		with self.assertRaises(TypeError):
+			Validator.Validate("1324", "bool")
+
+	def test_validate_bool_true_correct(self):
+		try: Validator.Validate(True, "bool")
+		except Exception as e: self.fail(f"❌ unexpected error: {e}")
+
+	def test_validate_bool_false_correct(self):
+		try: Validator.Validate(False, "bool")
+		except Exception as e: self.fail(f"❌ unexpected error: {e}")
 
 	def test_str_wrong(self):
-		with self.assertRaises(TypeError):
-			Validator.Validate(1.23, "str")
+		with self.assertRaises(TypeError): Validator.Validate(1.23, "str")
 
 	def test_list_correct(self):
-		try:
-			Validator.Validate([1,2,3], "list")
-		except Exception as e:
-			self.fail(f"unexpected error: {e}")
+		try: Validator.Validate([1,2,3], "list")
+		except Exception as e: self.fail(f"❌ unexpected error: {e}")
 
 	def test_list_wrong(self):
-		with self.assertRaises(TypeError):
-			Validator.Validate({}, "list")
+		with self.assertRaises(TypeError): Validator.Validate({}, "list")
 
 	def test_int_correct(self):
-		try:
-			Validator.Validate(1, "int")
-		except Exception as e:
-			self.fail(f"unexpected error: {e}")
+		try: Validator.Validate(1, "int")
+		except Exception as e: self.fail(f"❌ unexpected error: {e}")
 
 	def test_int_wrong(self):
-		with self.assertRaises(TypeError):
-			Validator.Validate(1.234, "int")
+		with self.assertRaises(TypeError): Validator.Validate(1.234, "int")
 
 	def test_dict_correct(self):
-		try:
-			Validator.Validate({"a":"b"}, "dict")
-		except Exception as e:
-			self.fail(f"unexpected error: {e}")
+		try: Validator.Validate({"a":"b"}, "dict")
+		except Exception as e: self.fail(f"❌ unexpected error: {e}")
 
 	def test_dict_wrong(self):
-		with self.assertRaises(TypeError):
-			Validator.Validate([], "dict")
+		with self.assertRaises(TypeError): Validator.Validate([], "dict")
 
 	def test_list_of_str_correct(self):
-		try:
-			Validator.Validate(["a","b","c"], "list[str]")
-		except Exception as e:
-			self.fail(f"unexpected error: {e}")
+		try: Validator.Validate(["a","b","c"], "list[str]")
+		except Exception as e: self.fail(f"❌ unexpected error: {e}")
 
 	def test_list_of_str_not_list(self):
-		with self.assertRaises(TypeError):
-			Validator.Validate({}, "list[str]")
+		with self.assertRaises(TypeError): Validator.Validate({}, "list[str]")
 
 	def test_number_bad_number(self):
-		with self.assertRaises(TypeError):
-			Validator.Validate("", "number")
+		with self.assertRaises(TypeError): Validator.Validate("", "number")
 
 	def test_number_int(self):
-		try:
-			Validator.Validate(123, "number")
-		except Exception as e:
-			self.fail(f"unexpected error: {e}")
+		try: Validator.Validate(123, "number")
+		except Exception as e: self.fail(f"❌ unexpected error: {e}")
 
 	def test_number_float(self):
-		try:
-			Validator.Validate(1234.5, "number")
-		except Exception as e:
-			self.fail(f"unexpected error: {e}")
+		try: Validator.Validate(1234.5, "number")
+		except Exception as e: self.fail(f"❌ unexpected error: {e}")
 
 	def test_list_of_str_not_str(self):
 		with self.assertRaises(TypeError):
 			Validator.Validate(["a","b","c",5,"d"], "list[str]")
 
 	def test_not_str(self):
-		with self.assertRaises(TypeError):
-			Validator.Validate(123, "str")
+		with self.assertRaises(TypeError): Validator.Validate(123, "str")
 
 	def test_validate_dict_input_dict_wrong_type(self):
 		with self.assertRaises(TypeError):
@@ -199,7 +189,7 @@ class TestValidatorClass(unittest.TestCase):
 		try:
 			Validator.ValidateDict(input_dict=working, keys_mandatory=keys)
 		except Exception as e:
-			self.fail(f"got unexpected exception {e}")
+			self.fail(f"❌ got unexpected exception {e}")
 
 	def test_validate_dict_keys_mandatory_and_keys_mandatory_types_length_mismatch(self):
 		types = ["int","int","int","int"]
@@ -230,7 +220,7 @@ class TestValidatorClass(unittest.TestCase):
 			Validator.ValidateDict(input_dict=ValidModelCardDict(), keys_mandatory=keys,
 				keys_mandatory_types=types)
 		except Exception as e:
-			self.fail(f"got unexpected exception: {e}")
+			self.fail(f"❌ got unexpected exception: {e}")
 
 	def test_validate_dict_bad_optional_key_types(self):
 		opt_keys = ["b","c"]
@@ -254,7 +244,7 @@ class TestValidatorClass(unittest.TestCase):
 			Validator.ValidateDict(input_dict=working, keys_optional=opt_keys,
 				keys_optional_types=opt_types)
 		except Exception as e:
-			self.fail(f"got unexpected exception: {e}")
+			self.fail(f"❌ got unexpected exception: {e}")
 
 	def test_validate_dict_optional_unequal_lengths(self):
 		opt_keys=["a","b","c"]
@@ -337,7 +327,7 @@ class TestValidatorClass(unittest.TestCase):
 			Validator.ValidateMandatoryDictKeys(input_dict=ValidModelCardDict(),
 				keys_mandatory=man_keys)
 		except Exception as e:
-			self.fail(f"unexpected exception: {e}")
+			self.fail(f"❌ unexpected exception: {e}")
 
 	def test_validate_mandatory_dict_keys_fail(self):
 		man_keys = ["full_description","author","category"]
