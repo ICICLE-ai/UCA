@@ -6,6 +6,10 @@ class IMTComponent(ABC):
 		pass
 
 	@abstractmethod
+	def Stop():
+		pass
+
+	@abstractmethod
 	def Terminate():
 		pass
 
