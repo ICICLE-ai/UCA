@@ -7,6 +7,8 @@ from patra_toolkit.patra_model_card import Metric
 from src.model_commons.patra.validator import Validator
 from src.model_commons.patra.model_card_wrapper import ModelCardWrapper
 from src.model_commons.patra.ai_model_wrapper import AIModelWrapper
+from huggingface_hub import ModelCard as HFModelCard
+from src.model_commons.hugging_face.hugging import Hugging
 import torch
 
 class TestValidatorClass(unittest.TestCase):
@@ -23,6 +25,16 @@ class TestValidatorClass(unittest.TestCase):
 		try:
 			mc = ModelCardWrapper(inputs=ValidModelCardDict()).GetModelCard()
 			Validator.Validate(mc,"ModelCard")
+		except Exception as e:
+			self.fail(f"❌ unexpected exception: {e}")
+
+	def test_hf_model_card_wrong(self):
+		with self.assertRaises(TypeError):
+			Validator.Validate(1345.6, "HFModelCard")
+	
+	def test_hf_model_card_pass(self):
+		try:
+			Validator.Validate(GetHFModelCard(), "HFModelCard")
 		except Exception as e:
 			self.fail(f"❌ unexpected exception: {e}")
 
@@ -544,3 +556,8 @@ def ValidBiasAnalysisDict() -> dict:
 		"equal_odds_difference":12.34
 	}
 
+def PublicRepoId() -> str:
+	return "NickCliffel/PublicUCATestRepo"
+
+def GetHFModelCard() -> HFModelCard:
+	return Hugging.GetModelCard(repo_id=PublicRepoId())

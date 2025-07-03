@@ -3,6 +3,7 @@ import os
 from pathlib import Path
 import shutil
 from src.model_commons.hugging_face.hugging import Hugging
+from huggingface_hub import ModelCard
 
 class TestHuggingClass(unittest.TestCase):
 	def test_login_bad_token_type(self):
@@ -307,6 +308,54 @@ class TestHuggingClass(unittest.TestCase):
 	def test_delete_repo_bad_repo_type_type(self):
 		with self.assertRaises(TypeError):
 			Hugging.DeleteRepo(repo_id=PublicRepoId(), repo_type=123.7543)
+
+	def test_get_model_card_bad_repo_id_type(self):
+		with self.assertRaises(TypeError):
+			Hugging.GetModelCard(repo_id=[12,34,67])
+	
+	def test_get_model_card_bad_token_type(self):
+		with self.assertRaises(TypeError):
+			Hugging.GetModelCard(repo_id=PublicRepoId(),
+				token={"a":1,"b":2})
+
+	def test_get_model_card_bad_token_file_path_type(self):
+		with self.assertRaises(TypeError):
+			Hugging.GetModelCard(repo_id=PublicRepoId(),
+				token_file_path=12344.245)
+
+	def test_get_model_card_pass(self):
+		try:	
+			mc = Hugging.GetModelCard(repo_id=PublicRepoId())
+			if not isinstance(mc, ModelCard):
+				self.fail(f"❌ expected ModelCard type got {type(mc)}")
+		except Exception as e:
+			self.fail(f"❌ receivied unexpected exception: {e}")
+
+	def test_push_model_card_bad_repo_id_type(self):
+		model_card = Hugging.GetModelCard(repo_id=PublicRepoId())
+		with self.assertRaises(TypeError):
+			Hugging.PushModelCard(repo_id=1234.5, model_card=model_card)
+
+	def test_push_model_card_bad_model_card_type(self):
+		with self.assertRaises(TypeError):
+			Hugging.PushModelCard(repo_id=PublicRepoId(), model_card=["a","b","c"])
+
+	def test_push_model_card_bad_token_file_path_type(self):
+		model_card = Hugging.GetModelCard(repo_id=PublicRepoId())
+		with self.assertRaises(TypeError):
+			Hugging.PushModelCard(repo_id=PublicRepoId(), model_card=model_card,
+				token_file_path={"a":"b","c":"d"})
+
+	def test_push_model_card_bad_token_type(self):
+		model_card = Hugging.GetModelCard(repo_id=PublicRepoId())
+		with self.assertRaises(TypeError):
+			Hugging.PushModelCard(repo_id=PublicRepoId(), model_card=model_card,
+				token=12345.78)
+
+	def test_push_model_card_pass(self):
+		model_card = Hugging.GetModelCard(repo_id=PublicRepoId())
+		Hugging.PushModelCard(repo_id=PublicRepoId(), model_card=model_card,
+			token_file_path=TokenFilePath())
 
 def PublicRepoId() -> str:
 	return "NickCliffel/PublicUCATestRepo"

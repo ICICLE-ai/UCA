@@ -4,6 +4,7 @@ from huggingface_hub import login
 from huggingface_hub import HfApi
 from huggingface_hub import create_repo
 from huggingface_hub import delete_repo
+from huggingface_hub import ModelCard
 from src.model_commons.patra.validator import Validator
 
 class Hugging():
@@ -233,3 +234,31 @@ class Hugging():
 			delete_repo(repo_id, repo_type=repo_type)
 			return
 		delete_repo(repo_id)
+
+	@staticmethod
+	def GetModelCard(repo_id:str, token_file_path:str="", token:str="") -> ModelCard:
+		# validating inputs
+		Validator.Validate(repo_id, "str")
+		Validator.Validate(token_file_path, "str")
+		Validator.Validate(token, "str")
+		
+		# login if given token or token_file_path
+		if token or token_file_path:
+			Hugging.Login(token=token, file_path=token_file_path)
+
+		# getting model card
+		return ModelCard.load(repo_id)
+
+	@staticmethod
+	def PushModelCard(repo_id:str, model_card:ModelCard, token_file_path:str="", token:str=""):
+		Validator.Validate(repo_id, "str")
+		Validator.Validate(model_card, "HFModelCard")
+		Validator.Validate(token_file_path, "str")
+		Validator.Validate(token, "str")
+
+		# login if given token or token_file_path
+		if token or token_file_path:
+			Hugging.Login(token=token, file_path=token_file_path)
+
+		# writing model card
+		model_card.push_to_hub(repo_id)

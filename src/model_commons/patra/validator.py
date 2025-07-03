@@ -3,6 +3,7 @@ from patra_toolkit.patra_model_card import AIModel
 from patra_toolkit.patra_model_card import BiasAnalysis
 from patra_toolkit.patra_model_card import ExplainabilityAnalysis
 from patra_toolkit.patra_model_card import Metric
+from huggingface_hub import ModelCard as HFModelCard
 from pathlib import Path
 
 class Validator():
@@ -10,7 +11,8 @@ class Validator():
 	def Validate(var, expec:str, error_type=None):
 		# types checked for
 		types = ["ModelCard","BiasAnalysis","AIModel","ExplainabilityAnalysis","Metric",
-			"str","int","list","dict","list[str]","number","list[int]","bool"]
+			"str","int","list","dict","list[str]","number","list[int]","bool",
+			"HFModelCard"]
 		if not expec in types:
 			raise ValueError(f"🛑 '{expec}' is not a supported type")
 	
@@ -47,6 +49,9 @@ class Validator():
 				Validator.ThrowTypeError(var, expec, error_type)
 		if expec == "bool":
 			if not isinstance(var, bool):
+				Validator.ThrowTypeError(var, expec, error_type)
+		if expec == "HFModelCard":
+			if not isinstance(var, HFModelCard):
 				Validator.ThrowTypeError(var, expec, error_type)
 		if expec == "list[str]":
 			Validator.Validate(var, "list", error_type)
