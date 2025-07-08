@@ -149,5 +149,21 @@ class TestCyberInfraClient(unittest.TestCase):
         listed = client.list_tacc_billing()
         self.assertEqual(len(listed), 2)
 
-if __name__ == "__main__":
-    unittest.main()
+    def test_queue_model_roundtrip(self):
+        orig = QueueToNodeConfig.new("Q", max_node=5, sc_to_cluster="C")
+        as_dict = orig.to_dict()
+        copy = QueueToNodeConfig.from_dict(as_dict)
+        self.assertEqual(copy, orig)
+
+    def test_node_model_roundtrip(self):
+        orig = NodeConfig.new(
+            system_name="n1", SC_name="S", cluster_name="C",
+            node_type="t", total_compute_nodes=1,
+            processor_type="p", processor_cores=4,
+            processor_clock_speed=2.5, memory_size_GB=8,
+            processor_model="m", processor_architecture="a",
+            sockets_count=1
+        )
+        as_dict = orig.to_dict()
+        copy = NodeConfig.from_dict(as_dict)
+        self.assertEqual(copy, orig)
