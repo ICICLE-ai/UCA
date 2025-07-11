@@ -1,80 +1,83 @@
-from patra_toolkit.patra_model_card import AIModel
-from src.model_commons.patra.validator import Validator
 import json
 
+from patra_toolkit.patra_model_card import AIModel
+
+from src.model_commons.patra.validator import Validator
+
+
 class AIModelWrapper():
-	def __init__(self, inputs:dict={}, ai_model:AIModel=None, file_path:str=""):
+	def __init__(self, inputs:dict | None = None, ai_model:AIModel=None, file_path:str=""):
 		# raise error if no parameters are given
 		if not inputs and not ai_model and not file_path:
 			raise ValueError("no parameters were given")
 		# creating ai_model parameter
 		if ai_model:
-			Validator.Validate(ai_model, "AIModel")
+			Validator.validate(ai_model, "AIModel")
 			self.ai_model = ai_model
 		elif inputs:
-			Validator.Validate(inputs, "dict")
+			Validator.validate(inputs, "dict")
 			self.ai_model = AIModel(**inputs)
 		elif file_path:
-			Validator.Validate(file_path, "str")
+			Validator.validate(file_path, "str")
 			with open(file_path, "r") as file:
 				self.ai_model = AIModel(**json.load(file))
 
-	def GetAIModel(self) -> AIModel:
+	def get_ai_model(self) -> AIModel:
 		return self.ai_model
 
-	def UpdateName(self, name:str):
-		Validator.Validate(name, "str")
+	def update_name(self, name:str):
+		Validator.validate(name, "str")
 		self.ai_model.name = name
 
-	def UpdateVersion(self, version:str):
-		Validator.Validate(version, "str")
+	def update_version(self, version:str):
+		Validator.validate(version, "str")
 		self.ai_model.version = version
 
-	def UpdateDescription(self, description:str):
-		Validator.Validate(description, "str")
+	def update_description(self, description:str):
+		Validator.validate(description, "str")
 		self.ai_model.description = description
 
-	def UpdateOwner(self, owner:str):
-		Validator.Validate(owner, "str")
+	def update_owner(self, owner:str):
+		Validator.validate(owner, "str")
 		self.ai_model.owner = owner
 
-	def UpdateLocation(self, location:str):
-		Validator.Validate(location, "str")
+	def update_location(self, location:str):
+		Validator.validate(location, "str")
 		self.ai_model.location = location
 
-	def UpdateLicense(self, license:str):
-		Validator.Validate(license, "str")
+	def update_license(self, license:str):
+		Validator.validate(license, "str")
 		self.ai_model.license = license
 
-	def UpdateFramework(self, framework:str):
-		Validator.Validate(framework, "str")
+	def update_framework(self, framework:str):
+		Validator.validate(framework, "str")
 		self.ai_model.framework = framework
 
-	def UpdateModelType(self, model_type:str):
-		Validator.Validate(model_type, "str")
+	def update_model_type(self, model_type:str):
+		Validator.validate(model_type, "str")
 		self.ai_model.model_type = model_type
 
-	def UpdateTestAccuracy(self, test_accuracy:float):
-		Validator.Validate(test_accuracy, "number")
+	def update_test_accuracy(self, test_accuracy:float):
+		Validator.validate(test_accuracy, "number")
 		self.ai_model.test_accuracy = test_accuracy
 
-	def UpdateModelStructure(self, model_structure):
-		Validator.Validate(model_structure, "dict")
+	def update_model_structure(self, model_structure):
+		Validator.validate(model_structure, "dict")
 		self.ai_model.model_structure = model_structure
 
-	def UpdateMetrics(self, metrics:dict={}, key:str="", value:str=""):
+	def update_metrics(self, metrics:dict | None = None, key:str="", value:str=""):
 		if not metrics and (not key or not value):
 			raise ValueError("expecting either metrics or key and value")
 		if metrics:
-			Validator.Validate(metrics, "dict")
+			Validator.validate(metrics, "dict")
 			self.ai_model.metrics = metrics
 		else:
-			self.AddMetric(key, value)
+			self.add_metric(key, value)
 
-	def AddMetric(self, key:str, value:str):
-		Validator.Validate(key, "str")
-		Validator.Validate(value, "str")
+	def add_metric(self, key:str, value:str):
+		Validator.validate(key, "str")
+		Validator.validate(value, "str")
 		self.ai_model.add_metric(key, value)
 
-	def PopulateModelStructure(self, trained_model):
+	def populate_model_structure(self, trained_model):
 		self.ai_model.populate_model_structure(trained_model)	

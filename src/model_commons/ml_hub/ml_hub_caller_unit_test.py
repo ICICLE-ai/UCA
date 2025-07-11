@@ -1,5 +1,5 @@
 import unittest
-from src.model_commons.ml_hub.ml_hub_caller import MLHubCaller
+
 
 class TestMLHubCallerClass(unittest.TestCase):
 	def test_get_base_url(self):

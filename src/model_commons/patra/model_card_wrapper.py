@@ -1,35 +1,34 @@
-from patra_toolkit.patra_model_card import ModelCard
-from patra_toolkit.patra_model_card import AIModel
-from patra_toolkit.patra_model_card import BiasAnalysis
-from patra_toolkit.patra_model_card import ExplainabilityAnalysis
-from patra_toolkit.patra_model_card import Metric
-from src.model_commons.patra.validator import Validator
-from src.model_commons.patra.ai_model_wrapper import AIModelWrapper
 import json
+
+from patra_toolkit.patra_model_card import AIModel, BiasAnalysis, ExplainabilityAnalysis, ModelCard
+
+from src.model_commons.patra.ai_model_wrapper import AIModelWrapper
+from src.model_commons.patra.validator import Validator
+
 
 class ModelCardWrapper():
 	
-	def __init__(self, inputs:dict={}, model_card:ModelCard=None, file_path:str=""):
+	def __init__(self, inputs:dict | None = None, model_card:ModelCard=None, file_path:str=""):
 		# raise error if no parameters are given
 		if not inputs and not model_card and not file_path:
 			raise ValueError("no parameters were given")
 		
 		# creating class model_card parameter
 		if model_card:
-			Validator.Validate(model_card, "ModelCard")
+			Validator.validate(model_card, "ModelCard")
 			self.model_card = model_card
 		elif inputs:
-			Validator.Validate(inputs, "dict")
+			Validator.validate(inputs, "dict")
 			self.model_card = ModelCard(**inputs)
 		elif file_path:
-			Validator.Validate(file_path, "str")
+			Validator.validate(file_path, "str")
 			with open(file_path, "r") as file:
 				self.model_card = ModelCard(**json.load(file))
 
-	def GetModelCard(self) -> ModelCard:
+	def get_model_card(self) -> ModelCard:
 		return self.model_card
 
-	def UpdateAIModel(self, inputs:dict={}, ai_model:AIModel=None, file_path:str="",
+	def update_ai_model(self, inputs:dict | None = None, ai_model:AIModel=None, file_path:str="",
 		ai_model_wrapper:AIModelWrapper=None):
 		# raise error if no parameters are given
 		if not inputs and not ai_model and not file_path and not ai_model_wrapper:
@@ -38,31 +37,33 @@ class ModelCardWrapper():
 		if ai_model_wrapper:
 			if not isinstance(ai_model_wrapper, AIModelWrapper):
 				raise TypeError("expected AIModelWrapper type")
-			self.model_card.ai_model = ai_model_wrapper.GetAIModel()
+			self.model_card.ai_model = ai_model_wrapper.get_ai_model()
 			return
 		
 		# updating ai_model
 		self.model_card.ai_model = AIModelWrapper(inputs=inputs, ai_model=ai_model,
-			file_path=file_path).GetAIModel()
+			file_path=file_path).get_ai_model()
 	
-	def UpdateBiasAnalysis(self, inputs:dict={}, bias_analysis:BiasAnalysis=None, file_path:str=""):
+	def update_bias_analysis(self, inputs:dict | None = None, bias_analysis:BiasAnalysis=None,
+		file_path:str=""):
+		
 		# raise error if no parameters are given
 		if not inputs and not bias_analysis and not file_path:
 			raise ValueError("no parameters were given")
 		
 		# updating BiasAnalysis
 		if bias_analysis:
-			Validator.Validate(bias_analysis, "BiasAnalysis")
+			Validator.validate(bias_analysis, "BiasAnalysis")
 			self.model_card.bias_analysis = bias_analysis
 		elif inputs:
-			Validator.Validate(inputs, "dict")
+			Validator.validate(inputs, "dict")
 			self.model_card.bias_analysis = BiasAnalysis(**inputs)
 		elif file_path:
-			Validator.Validate(inputs, "str")
+			Validator.validate(inputs, "str")
 			with open(file_path, "r") as file:
 				self.model_card.bias_analysis = BiasAnalysis(**json.load(file))
 
-	def UpdateXaiAnalysis(self, inputs:dict={}, xia_analysis:ExplainabilityAnalysis=None,
+	def update_xai_analysis(self, inputs:dict | None = None, xia_analysis:ExplainabilityAnalysis=None,
 		file_path:str=""):
 
 		# raise error if no parameters are given
@@ -71,81 +72,81 @@ class ModelCardWrapper():
 
 		# updating ExplainabilityAnalysis
 		if xia_analysis:
-			Validator.Validate(xia_analysis, "ExplainabilityAnalysis")
+			Validator.validate(xia_analysis, "ExplainabilityAnalysis")
 			self.model_card.xia_analysis = xia_analysis
 		elif inputs:
-			Validator.Validate(inputs, "dict")
+			Validator.validate(inputs, "dict")
 			self.model_card.xia_analysis = ExplainabilityAnalysis(**inputs)
 		elif file_path:
-			Validator.Validate(inputs, "str")
+			Validator.validate(inputs, "str")
 			with open(file_path, "r") as file:
 				self.model_card.xia_analysis = ExplainabilityAnalysis(**json.load(file))
 
-	def UpdateName(self, name:str):
-		Validator.Validate(name, "str")
+	def update_name(self, name:str):
+		Validator.validate(name, "str")
 		self.model_card.name = name
 
-	def UpdateVersion(self, version:str):
-		Validator.Validate(version, "str")
+	def update_version(self, version:str):
+		Validator.validate(version, "str")
 		self.model_card.version = version
 
-	def UpdateShortDescription(self, short_description:str):
-		Validator.Validate(short_description, "str")
+	def update_short_description(self, short_description:str):
+		Validator.validate(short_description, "str")
 		self.model_card.short_description = short_description
 
-	def UpdateFullDescription(self, full_description:str):
-		Validator.Validate(full_description, "str")
+	def update_full_description(self, full_description:str):
+		Validator.validate(full_description, "str")
 		self.model_card.full_description = full_description
 
-	def UpdateKeywords(self, keywords:str):
-		Validator.Validate(keywords, "str")
+	def update_keywords(self, keywords:str):
+		Validator.validate(keywords, "str")
 		self.model_card.keywords = keywords
 
-	def UpdateAuthor(self, author:str):
-		Validator.Validate(author, "str")
+	def update_author(self, author:str):
+		Validator.validate(author, "str")
 		self.model_card.author = author
 
-	def UpdateInputType(self, input_type:str):
-		Validator.Validate(input_type, "str")
+	def update_input_type(self, input_type:str):
+		Validator.validate(input_type, "str")
 		self.model_card.input_type = input_type
 
-	def UpdateCategory(self, category:str):
-		Validator.Validate(category, "str")
+	def update_category(self, category:str):
+		Validator.validate(category, "str")
 		self.model_card.category = category
 
-	def UpdateInputData(self, input_data:str):
-		Validator.Validate(input_data, "str")
+	def update_input_data(self, input_data:str):
+		Validator.validate(input_data, "str")
 		self.model_card.input_data = input_data
 
-	def UpdateOutputData(self, output_data:str):
-		Validator.Validate(output_data, "str")
+	def update_output_data(self, output_data:str):
+		Validator.validate(output_data, "str")
 		self.model_card.output_data = output_data
 
-	def UpdateFoundationalModel(self, foundational_model:str):
-		Validator.Validate(foundational_model, "str")
+	def update_foundational_model(self, foundational_model:str):
+		Validator.validate(foundational_model, "str")
 		self.model_card.foundational_model = foundational_model
 
-	def UpdateModelRequirements(self, model_requirements:list[str]):
-		Validator.Validate(model_requirements, "list[str]")
+	def update_model_requirements(self, model_requirements:list[str]):
+		Validator.validate(model_requirements, "list[str]")
 		self.model_card.model_requirements = model_requirements
 
-	def UpdateModelStructure(self, trained_model):
+	def update_model_structure(self, trained_model):
 		if self.model_card.ai_model:
 			self.model_card.ai_model.populate_model_structure(trained_model)
 		else:
 			raise ValueError("never set an ai model")
 
-	def PopulateRequirements(self):
+	def populate_requirements(self):
 		self.model_card.populate_requirements()
 
-	def PopulateBias(self, dataset, true_labels:list, predicted_labels:list,
+	def populate_bias(self, dataset, true_labels:list, predicted_labels:list,
 		sensitive_feature_name:str, sensitive_feature_data:list, model):
 		
 		# validating inputs
-		Validator.Validate(true_labels, "list")
-		Validator.Validate(predicted_labels, "list")
-		Validator.Validate(sensitive_feature_name, "str")
-		Validator.Validate(sensitive_feature_data, "list")
+		Validator.validate(true_labels, "list")
+		Validator.validate(predicted_labels, "list")
+		Validator.validate(sensitive_feature_name, "str")
+		Validator.validate(sensitive_feature_data, "list")
 
 		# populating bias
 		self.model_card.populate_bias(dataset=dataset,
@@ -155,11 +156,11 @@ class ModelCardWrapper():
 			sensitive_feature_data=sensitive_feature_data,
 			model=model)
 
-	def PopulateXai(self, train_dataset, column_names:list, model, n_features:int=None):
+	def populate_xai(self, train_dataset, column_names:list, model, n_features:int=None):
 		# validating inputs
-		Validator.Validate(column_names, "list")
+		Validator.validate(column_names, "list")
 		if n_features:
-			Validator.Validate(n_features, "int")
+			Validator.validate(n_features, "int")
 		
 		# populating xia
 		if n_features:
@@ -172,19 +173,20 @@ class ModelCardWrapper():
 				column_names=column_names,
 				model=model)
 
-	def WriteToFile(self, file_location:str):
+	def write_to_file(self, file_location:str):
 		# validating inputs
-		Validator.Validate(file_location, "str")
+		Validator.validate(file_location, "str")
 		# validating model card before saving
 		self.model_card.validate()
 		# writing to file
 		self.model_card.save(file_location)
 
-	def WriteModelToPatraServer(self, patra_server_url:str, token:str="") -> dict:
+	def write_model_to_patra_server(self, patra_server_url:str, token:str="") -> dict:
 		# validating inputs
 		
-		Validator.Validate(patra_server_url, "str")
-		if token: Validator.Validate(token, "str")
+		Validator.validate(patra_server_url, "str")
+		if token:
+			Validator.validate(token, "str")
 
 		# validating model card before submitting to server
 		self.model_card.validate()

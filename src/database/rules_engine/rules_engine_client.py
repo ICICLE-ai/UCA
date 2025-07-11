@@ -1,13 +1,15 @@
 # TODO: Need to write ReadMe file with end to end explaination
+import datetime
+import uuid
+
 from pymongo import MongoClient
 from tapipy.tapis import Tapis
-import uuid
-import datetime
 
-from src.model_commons.patra.validator import Validator
-from src.database.rules_engine.rules_engine_entity import Rule
-from src.database.rules_engine.exceptions import RuleEngineError, RuleValidationError, RuleNotFoundError
 from src.database.rules_engine.config import Config
+from src.database.rules_engine.exceptions import RuleEngineError, RuleNotFoundError, RuleValidationError
+from src.database.rules_engine.rules_engine_entity import Rule
+from src.model_commons.patra.validator import Validator
+
 
 class RuleEngineClient:
     def __init__(
@@ -27,7 +29,7 @@ class RuleEngineClient:
         try:
             self.tapis.get_tokens()
         except Exception as e:
-            raise RuleEngineError(f"Failed to authenticate to TAPIS: {e}")
+            raise RuleEngineError(f"Failed to authenticate to TAPIS: {e}") from e
         
         # MongoDB connection
         uri = mongo_uri or Config.MONGO_URI
@@ -37,14 +39,14 @@ class RuleEngineClient:
 
     def create_rule(self, rule_data: dict) -> str:
         try:
-            Validator.Validate(rule_data, "dict", error_type=RuleValidationError)
-            Validator.ValidateDict(
+            Validator.validate(rule_data, "dict", error_type=RuleValidationError)
+            Validator.validate_dict(
                 rule_data,
                 keys_mandatory=["CI", "Type", "Services", "Data_Rules"],
                 keys_mandatory_types=["str", "str", "list", "list"]
             )
         except ValueError as ve:
-            raise RuleValidationError(str(ve))
+            raise RuleValidationError(str(ve)) from ve
 
         # TODO: Future work to validate the list types
         # Validator.Validate(rule_data["Services"],    "list[str]", error_type=RuleValidationError)

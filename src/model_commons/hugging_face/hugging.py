@@ -1,19 +1,15 @@
-from huggingface_hub import hf_hub_download
-from huggingface_hub import snapshot_download
-from huggingface_hub import login
-from huggingface_hub import HfApi
-from huggingface_hub import create_repo
-from huggingface_hub import delete_repo
-from huggingface_hub import ModelCard
+from huggingface_hub import HfApi, ModelCard, create_repo, delete_repo, hf_hub_download, login, snapshot_download
+
 from src.model_commons.patra.validator import Validator
+
 
 class Hugging():
 	
 	@staticmethod
-	def Login(token:str="", file_path:str=""):
+	def login(token:str="", file_path:str=""):
 		# validating inputs
-		Validator.Validate(token, "str")
-		Validator.Validate(file_path, "str")
+		Validator.validate(token, "str")
+		Validator.validate(file_path, "str")
 		
 		# throw value error if didn't get any inputs
 		if not token and not file_path:
@@ -23,18 +19,18 @@ class Hugging():
 		if token:
 			login(token=token)
 		else:
-			Validator.ValidateFileExists(file_path)
+			Validator.validate_file_exists(file_path)
 			with open(file_path, "r") as file:
 				read_token = file.read().strip()
 				login(token=read_token)
 
 	@staticmethod
-	def DownloadFile(repo_id:str, filename:str, revision:str="", local_dir:str="") -> str:
+	def download_file(repo_id:str, filename:str, revision:str="", local_dir:str="") -> str:
 		# validating input data types
-		Validator.Validate(repo_id, "str")
-		Validator.Validate(filename, "str")
-		Validator.Validate(revision, "str")
-		Validator.Validate(local_dir, "str")
+		Validator.validate(repo_id, "str")
+		Validator.validate(filename, "str")
+		Validator.validate(revision, "str")
+		Validator.validate(local_dir, "str")
 
 		# downloading to a specific local file path from particular revision	
 		if revision and local_dir:
@@ -50,15 +46,17 @@ class Hugging():
 		return hf_hub_download(repo_id=repo_id, filename=filename)
 
 	@staticmethod
-	def DownloadRepo(repo_id:str, revision:str="", allow_patterns:list[str]=[],
-		ignore_patterns:list[str]=[], local_dir:str="") -> str:
+	def download_repo(repo_id:str, revision:str="", allow_patterns:list[str] | None = None,
+		ignore_patterns:list[str] | None = None, local_dir:str="") -> str:
 		
 		# validating input data types
-		Validator.Validate(repo_id, "str")
-		Validator.Validate(revision, "str")
-		Validator.Validate(allow_patterns, "list[str]")
-		Validator.Validate(ignore_patterns, "list[str]")
-		Validator.Validate(local_dir, "str")
+		Validator.validate(repo_id, "str")
+		Validator.validate(revision, "str")
+		if allow_patterns:
+			Validator.validate(allow_patterns, "list[str]")
+		if ignore_patterns:
+			Validator.validate(ignore_patterns, "list[str]")
+		Validator.validate(local_dir, "str")
 	
 		# uploading repo
 		if not revision and not allow_patterns and not ignore_patterns and not local_dir:
@@ -105,26 +103,26 @@ class Hugging():
 				revision = revision, local_dir = local_dir)
 
 	@staticmethod
-	def GetRepoInfo(repo_id:str):
-		Validator.Validate(repo_id, "str")
+	def get_repo_info(repo_id:str):
+		Validator.validate(repo_id, "str")
 		api = HfApi()
 		return api.repo_info(repo_id)
 
 	@staticmethod
-	def UploadFile(local_file_path:str, repo_file_path:str, repo_id:str, repo_type:str="",
+	def upload_file(local_file_path:str, repo_file_path:str, repo_id:str, repo_type:str="",
 		token:str="", token_file_path:str=""):
 		# validating input data
-		Validator.Validate(local_file_path, "str")
-		Validator.Validate(repo_file_path, "str")
-		Validator.Validate(repo_id, "str")
-		Validator.Validate(repo_type, "str")
-		Validator.Validate(token, "str")
-		Validator.Validate(token_file_path, "str")
-		Validator.ValidateFileExists(local_file_path)		
+		Validator.validate(local_file_path, "str")
+		Validator.validate(repo_file_path, "str")
+		Validator.validate(repo_id, "str")
+		Validator.validate(repo_type, "str")
+		Validator.validate(token, "str")
+		Validator.validate(token_file_path, "str")
+		Validator.validate_file_exists(local_file_path)		
 
 		# login if given token or token_file_path
 		if token or token_file_path:
-			Hugging.Login(token=token, file_path=token_file_path)
+			Hugging.login(token=token, file_path=token_file_path)
 		
 		# making api call
 		api = HfApi()
@@ -138,25 +136,28 @@ class Hugging():
 			repo_id = repo_id)
 
 	@staticmethod
-	def UploadFolder(local_folder_path:str, repo_path:str, repo_id:str, repo_type:str="model",
-		ignore_patterns:list[str]=[], allow_patterns:list[str]=[], delete_patterns:list[str]=[],
-		token:str="", token_file_path:str=""):
+	def upload_folder(local_folder_path:str, repo_path:str, repo_id:str, repo_type:str="model",
+		ignore_patterns:list[str] | None = None, allow_patterns:list[str] | None = None,
+		delete_patterns:list[str] | None = None, token:str="", token_file_path:str=""):
 		
 		# validating input data
-		Validator.Validate(local_folder_path, "str")
-		Validator.Validate(repo_path, "str")
-		Validator.Validate(repo_id, "str")
-		Validator.Validate(repo_type, "str")
-		Validator.Validate(ignore_patterns, "list[str]")
-		Validator.Validate(allow_patterns, "list[str]")
-		Validator.Validate(delete_patterns, "list[str]")
-		Validator.Validate(token, "str")
-		Validator.Validate(token_file_path, "str")
-		Validator.ValidateDirectoryExists(local_folder_path)	
+		Validator.validate(local_folder_path, "str")
+		Validator.validate(repo_path, "str")
+		Validator.validate(repo_id, "str")
+		Validator.validate(repo_type, "str")
+		if ignore_patterns:
+			Validator.validate(ignore_patterns, "list[str]")
+		if allow_patterns:
+			Validator.validate(allow_patterns, "list[str]")
+		if delete_patterns:
+			Validator.validate(delete_patterns, "list[str]")
+		Validator.validate(token, "str")
+		Validator.validate(token_file_path, "str")
+		Validator.validate_directory_exists(local_folder_path)	
 	
 		# login if token or token_file_path
 		if token or token_file_path:
-			Hugging.Login(token=token, file_path=token_file_path)		
+			Hugging.login(token=token, file_path=token_file_path)		
 
 		# making api call
 		api = HfApi()
@@ -213,21 +214,21 @@ class Hugging():
 			repo_type = repo_type)
 
 	@staticmethod
-	def CreateRepo(repo_id:str, repo_type:str="", private:bool=False) -> str:
+	def create_repo(repo_id:str, repo_type:str="", private:bool=False) -> str:
 		# validating inputs
-		Validator.Validate(repo_id, "str")
-		Validator.Validate(repo_type, "str")
-		Validator.Validate(private, "bool")		
+		Validator.validate(repo_id, "str")
+		Validator.validate(repo_type, "str")
+		Validator.validate(private, "bool")		
 		
 		if repo_type:
 			return create_repo(repo_id, repo_type=repo_type, private=private)
 		return create_repo(repo_id, private=private)
 
 	@staticmethod
-	def DeleteRepo(repo_id:str, repo_type:str=""):
+	def delete_repo(repo_id:str, repo_type:str=""):
 		# validating inputs
-		Validator.Validate(repo_id, "str")
-		Validator.Validate(repo_type, "str")
+		Validator.validate(repo_id, "str")
+		Validator.validate(repo_type, "str")
 		
 		# deleting repo
 		if repo_type:
@@ -236,29 +237,29 @@ class Hugging():
 		delete_repo(repo_id)
 
 	@staticmethod
-	def GetModelCard(repo_id:str, token_file_path:str="", token:str="") -> ModelCard:
+	def get_model_card(repo_id:str, token_file_path:str="", token:str="") -> ModelCard:
 		# validating inputs
-		Validator.Validate(repo_id, "str")
-		Validator.Validate(token_file_path, "str")
-		Validator.Validate(token, "str")
+		Validator.validate(repo_id, "str")
+		Validator.validate(token_file_path, "str")
+		Validator.validate(token, "str")
 		
 		# login if given token or token_file_path
 		if token or token_file_path:
-			Hugging.Login(token=token, file_path=token_file_path)
+			Hugging.login(token=token, file_path=token_file_path)
 
 		# getting model card
 		return ModelCard.load(repo_id)
 
 	@staticmethod
-	def PushModelCard(repo_id:str, model_card:ModelCard, token_file_path:str="", token:str=""):
-		Validator.Validate(repo_id, "str")
-		Validator.Validate(model_card, "HFModelCard")
-		Validator.Validate(token_file_path, "str")
-		Validator.Validate(token, "str")
+	def push_model_card(repo_id:str, model_card:ModelCard, token_file_path:str="", token:str=""):
+		Validator.validate(repo_id, "str")
+		Validator.validate(model_card, "HFModelCard")
+		Validator.validate(token_file_path, "str")
+		Validator.validate(token, "str")
 
 		# login if given token or token_file_path
 		if token or token_file_path:
-			Hugging.Login(token=token, file_path=token_file_path)
+			Hugging.login(token=token, file_path=token_file_path)
 
 		# writing model card
 		model_card.push_to_hub(repo_id)

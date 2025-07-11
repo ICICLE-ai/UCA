@@ -1,6 +1,8 @@
 # This is a sample example production level test case
 import os
+
 from .rules_engine_client import RuleEngineClient
+
 
 def main():
     client = RuleEngineClient(

@@ -1,18 +1,19 @@
 from abc import ABC, abstractmethod
 
+
 class IMTComponent(ABC):
 	@abstractmethod
-	def Start():
+	def start():
 		pass
 
 	@abstractmethod
-	def Stop():
+	def stop():
 		pass
 
 	@abstractmethod
-	def Terminate():
+	def terminate():
 		pass
 
 	@abstractmethod
-	def Restart():
+	def restart():
 		pass

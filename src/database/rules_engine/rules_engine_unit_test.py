@@ -1,17 +1,14 @@
 #TODO: Look into finding more stable test cases if any
 
+import datetime
 import unittest
 import uuid
-import datetime
 from unittest.mock import patch
 
+from src.database.rules_engine.exceptions import RuleEngineError, RuleNotFoundError, RuleValidationError
 from src.database.rules_engine.rules_engine_client import RuleEngineClient
-from src.database.rules_engine.exceptions import (
-    RuleEngineError,
-    RuleValidationError,
-    RuleNotFoundError
-)
 from src.database.rules_engine.rules_engine_entity import Rule
+
 
 class DummyToken:
     def __init__(self):

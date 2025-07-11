@@ -1,51 +1,50 @@
-import requests
 from src.model_commons.patra.validator import Validator
 
 
 class MLHubCaller():
 	@staticmethod
-	def GetBaseURL() -> str:
+	def get_base_url() -> str:
 		return "https://dev.develop.tapis.io/v3/mlhub/models-api/platforms/"
 
 	@staticmethod
-	def BuildGetModelURL(platform:str) -> str:
+	def build_get_model_url(platform:str) -> str:
 		# validating inputs
-		Validator.Validate(platform, "str")
-		result = GetBaseURL() + platform + "/models/"
+		Validator.validate(platform, "str")
+		result = MLHubCaller().GetBaseURL() + platform + "/models/"
 		return result
 
 	@staticmethod
-	def PullModelFromHuggingFace():
-		url = BuildGetModelURL(platform="huggingface")
+	def pull_model_from_hugging_face():
+		_url = MLHubCaller().build_get_model_url(platform="huggingface")
 		raise NotImplementedError("PullModelFromHuggingFace has yet to be implemented")
 
 	@staticmethod
-	def WriteModelToHuggingFace():
+	def write_model_to_hugging_face():
 		raise NotImplementedError("WriteModelToHuggingFace has yet to be implemented")
 	
 	@staticmethod
-	def SearchHuggingFace():
+	def search_hugging_face():
 		raise NotImplementedError("SearchHuggingFace has yet to be implemented")
 
 	@staticmethod
-	def PullModelFromGithub():
-		url = BuildGetModelURL(platform="github")
+	def pull_model_from_github():
+		_url = MLHubCaller().BuildGetModelURL(platform="github")
 		raise NotImplementedError("PullModelFromGithub has yet to be implemented")
 
 	@staticmethod
-	def WriteModelToGithub():
+	def write_model_to_github():
 		raise NotImplementedError("WriteModelToGithub has yet to be implemented")
 
 	@staticmethod
-	def SearchPatra():
+	def search_patra():
 		raise NotImplementedError("SearchPatra has yet to be implemented")
 
 	@staticmethod
-	def WriteModelCardToPatra():
+	def write_model_card_to_patra():
 		raise NotImplementedError("WriteModelCardToPatra has yet to be implemented")
 
 	@staticmethod
-	def PullModelCardFromPatra():
+	def pull_model_card_from_patra():
 		raise NotImplementedError("PullModelCardFromPatra has yet to be implemented")
 
 	

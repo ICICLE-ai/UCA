@@ -1,12 +1,12 @@
 import unittest
 import uuid
-from typing import Any, Dict, List
+from typing import List
 from unittest.mock import patch
 
-from src.database.cyber_infra.cyber_infra_client import CyberInfraClient
-from src.database.cyber_infra.cyber_infra_entity import QueueToNodeConfig, NodeConfig
-
 import src.database.cyber_infra.config as cfg
+from src.database.cyber_infra.cyber_infra_client import CyberInfraClient
+from src.database.cyber_infra.cyber_infra_entity import NodeConfig, QueueToNodeConfig
+
 cfg.MONGO_URI = ""
 cfg.DB_NAME   = ""
 
@@ -88,10 +88,10 @@ class TestCyberInfraClient(unittest.TestCase):
             client.insert_node_configs([{"foo":"bar"}, 123])
 
         n1 = NodeConfig.new(
-            system_name="n1", SC_name="S", cluster_name="C",
+            system_name="n1", sc_name="S", cluster_name="C",
             node_type="t", total_compute_nodes=1,
             processor_type="p", processor_cores=4,
-            processor_clock_speed=2.5, memory_size_GB=8,
+            processor_clock_speed=2.5, memory_size_gb=8,
             processor_model="m", processor_architecture="a",
             sockets_count=1
         )
@@ -108,7 +108,7 @@ class TestCyberInfraClient(unittest.TestCase):
         with self.assertRaises(TypeError):
             client.insert_sc_clusters("nope")
 
-        rec = {"cluster_name":"X","SC_name":"Y","is_active":True}
+        rec = {"cluster_name":"X","sc_name":"Y","is_active":True}
         uid = client.insert_sc_clusters(rec)
         self.assertIsInstance(uid, str)
 
@@ -157,10 +157,10 @@ class TestCyberInfraClient(unittest.TestCase):
 
     def test_node_model_roundtrip(self):
         orig = NodeConfig.new(
-            system_name="n1", SC_name="S", cluster_name="C",
+            system_name="n1", sc_name="S", cluster_name="C",
             node_type="t", total_compute_nodes=1,
             processor_type="p", processor_cores=4,
-            processor_clock_speed=2.5, memory_size_GB=8,
+            processor_clock_speed=2.5, memory_size_gb=8,
             processor_model="m", processor_architecture="a",
             sockets_count=1
         )

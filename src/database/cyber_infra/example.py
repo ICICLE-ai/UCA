@@ -1,8 +1,6 @@
-import os
-import uuid
 
 from src.database.cyber_infra.cyber_infra_client import CyberInfraClient
-from src.database.cyber_infra.cyber_infra_entity import QueueToNodeConfig, NodeConfig
+from src.database.cyber_infra.cyber_infra_entity import NodeConfig, QueueToNodeConfig
 
 # --- QUEUE DEMOS --------------------------------------------------
 

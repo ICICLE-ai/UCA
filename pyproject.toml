@@ -1,0 +1,9 @@
+[tool.ruff]
+line-length = 200
+target-version = "py310"
+select = ["E", "F", "B", "I", "N"]
+ignore = ["E203", "E501"]
+
+[tool.ruff.format]
+quote-style = "double"
+indent-style = "space"

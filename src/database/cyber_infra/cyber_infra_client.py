@@ -1,11 +1,13 @@
+import uuid
+from typing import Any, Dict, List, Optional
+
 from pymongo import MongoClient
 from pymongo.collection import Collection
-from typing import List, Dict, Any, Optional
-import uuid
 
-from src.database.cyber_infra.config import MONGO_URI, DB_NAME
-from src.database.cyber_infra.cyber_infra_entity import QueueToNodeConfig, NodeConfig
+from src.database.cyber_infra.config import DB_NAME, MONGO_URI
+from src.database.cyber_infra.cyber_infra_entity import NodeConfig, QueueToNodeConfig
 from src.model_commons.patra.validator import Validator
+
 
 class CyberInfraClient:
     def __init__(
@@ -14,12 +16,12 @@ class CyberInfraClient:
         db_name: Optional[str] = None
     ):
         self._uri = uri or MONGO_URI
-        Validator.Validate(self._uri, "str")
+        Validator.validate(self._uri, "str")
         if not self._uri:
             raise ValueError("MONGO_URI is required and must be a non-empty string")
 
         self._db_name = db_name or DB_NAME
-        Validator.Validate(self._db_name, "str")
+        Validator.validate(self._db_name, "str")
         if not self._db_name:
             raise ValueError("DB_NAME is required and must be a non-empty string")
 
@@ -27,7 +29,7 @@ class CyberInfraClient:
         self.db = self._client[self._db_name]
 
     def _col(self, name: str) -> Collection:
-        Validator.Validate(name, "str")
+        Validator.validate(name, "str")
         return self.db[name]
 
     # -- QUEUE_TO_NODE_CONFIG --------------------------------------------------
@@ -36,7 +38,7 @@ class CyberInfraClient:
         self,
         configs: List[QueueToNodeConfig]
     ) -> int:
-        Validator.Validate(configs, "list")
+        Validator.validate(configs, "list")
         for cfg in configs:
             if not isinstance(cfg, QueueToNodeConfig):
                 raise TypeError(f"All items must be QueueToNodeConfig, got {type(cfg)}")
@@ -60,7 +62,7 @@ class CyberInfraClient:
         self,
         configs: List[NodeConfig]
     ) -> int:
-        Validator.Validate(configs, "list")
+        Validator.validate(configs, "list")
         for cfg in configs:
             if not isinstance(cfg, NodeConfig):
                 raise TypeError(...)
@@ -72,7 +74,7 @@ class CyberInfraClient:
         filter_query: Optional[Dict[str, Any]] = None
     ) -> List[Dict[str, Any]]:
         if filter_query is not None:
-            Validator.Validate(filter_query, "dict")
+            Validator.validate(filter_query, "dict")
         return list(self._col("NODE_CONFIG").find(filter_query or {}))
 
     # -- SC_TO_CLUSTERS --------------------------------------------------
@@ -81,7 +83,7 @@ class CyberInfraClient:
         self,
         record: Dict[str, Any]
     ) -> str:
-        Validator.Validate(record, "dict")
+        Validator.validate(record, "dict")
         record["UUID"] = record.get("UUID") or str(uuid.uuid4())
         self._col("SC_TO_CLUSTERS").insert_one(record)
         return record["UUID"]
@@ -91,7 +93,7 @@ class CyberInfraClient:
         filter_query: Optional[Dict[str, Any]] = None
     ) -> List[Dict[str, Any]]:
         if filter_query is not None:
-            Validator.Validate(filter_query, "dict")
+            Validator.validate(filter_query, "dict")
         return list(self._col("SC_TO_CLUSTERS").find(filter_query or {}))
 
     # -- BILLING_AND_COST --------------------------------------------------
@@ -100,11 +102,11 @@ class CyberInfraClient:
         self,
         record: Dict[str, Any]
     ) -> str:
-        Validator.Validate(record, "dict")
+        Validator.validate(record, "dict")
         record["UUID"] = record.get("UUID") or str(uuid.uuid4())
-        Validator.Validate(record.get("supercomputer_center_name"), "str")
-        Validator.Validate(record.get("service_type"), "str")
-        Validator.Validate(record.get("cost"), "number")
+        Validator.validate(record.get("supercomputer_center_name"), "str")
+        Validator.validate(record.get("service_type"), "str")
+        Validator.validate(record.get("cost"), "number")
 
         col = self._col("BILLING_AND_COST")
         col.insert_one(record)
@@ -115,7 +117,7 @@ class CyberInfraClient:
         filter_query: Optional[Dict[str, Any]] = None
     ) -> List[Dict[str, Any]]:
         if filter_query is not None:
-            Validator.Validate(filter_query, "dict")
+            Validator.validate(filter_query, "dict")
         return list(self._col("BILLING_AND_COST").find(filter_query or {}))
 
     # -- TACC_BILLING_INFO --------------------------------------------------
@@ -124,11 +126,11 @@ class CyberInfraClient:
         self,
         entries: List[Dict[str, Any]]
     ) -> int:
-        Validator.Validate(entries, "list")
+        Validator.validate(entries, "list")
         valid = []
         for e in entries:
             try:
-                Validator.Validate(e, "dict")
+                Validator.validate(e, "dict")
             except (TypeError, ValueError):
                 continue
             e["UUID"] = e.get("UUID") or str(uuid.uuid4())
@@ -145,5 +147,5 @@ class CyberInfraClient:
         filter_query: Optional[Dict[str, Any]] = None
     ) -> List[Dict[str, Any]]:
         if filter_query is not None:
-            Validator.Validate(filter_query, "dict")
+            Validator.validate(filter_query, "dict")
         return list(self._col("TACC_BILLING_INFO").find(filter_query or {}))

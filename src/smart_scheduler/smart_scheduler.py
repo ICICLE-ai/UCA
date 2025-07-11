@@ -1,23 +1,25 @@
-from src.model_commons.patra.validator import Validator
+from abc import abstractmethod
+
 from src.imt_component import IMTComponent
 
+
 class SmartScheduler(IMTComponent):
-	@abstartmethod
-	def ValidateInputs():
+	@abstractmethod
+	def validate_inputs():
 		pass
 
 	@abstractmethod
-	def Estimate():
+	def estimate():
 		pass
 
 	@abstractmethod
-	def SelectBestSystem():
+	def select_best_system():
 		pass
 
 	@abstractmethod
-	def MonitorService():
+	def monitor_service():
 		pass
 
 	@abstractmethod
-	def StopService():
+	def stop_service():
 		pass

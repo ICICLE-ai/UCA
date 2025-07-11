@@ -1,5 +1,6 @@
 import os
 
+
 class Config:
     TAPIS_URL = os.getenv("TAPIS_BASE_URL")
     TAPIS_USER = os.getenv("TAPIS_USER")
