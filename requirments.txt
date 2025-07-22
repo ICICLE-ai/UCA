@@ -1,0 +1,47 @@
+attrs==25.3.0
+Bottleneck @ file:///private/var/folders/nz/j6p8yfhx1mv_0grj5xl4650h0000gp/T/abs_55txi4fy1u/croot/bottleneck_1731058642212/work
+certifi==2025.4.26
+charset-normalizer==3.4.2
+cloudpickle==3.1.1
+colorama==0.4.6
+fairlearn==0.11.0
+filelock==3.18.0
+fsspec==2025.5.1
+hf-xet==1.1.5
+huggingface-hub==0.33.0
+idna==3.10
+Jinja2==3.1.6
+joblib==1.5.1
+jsonschema==4.23.0
+jsonschema-specifications==2025.4.1
+llvmlite==0.44.0
+MarkupSafe==3.0.2
+mpmath==1.3.0
+networkx==3.4.2
+numba==0.61.2
+numexpr @ file:///private/var/folders/nz/j6p8yfhx1mv_0grj5xl4650h0000gp/T/abs_b3kvvt6tc6/croot/numexpr_1730215947700/work
+numpy==2.2.6
+packaging==25.0
+pandas==2.3.0
+patra-toolkit==0.1.2
+pillow==11.2.1
+python-dateutil @ file:///private/var/folders/k1/30mswbxs7r1g6zwn8y4fyt500000gp/T/abs_66ud1l42_h/croot/python-dateutil_1716495741162/work
+pytz==2025.2
+PyYAML==6.0.2
+referencing==0.36.2
+requests==2.32.3
+rpds-py==0.25.1
+scikit-learn==1.7.0
+scipy==1.15.3
+shap==0.46.0
+six @ file:///private/var/folders/k1/30mswbxs7r1g6zwn8y4fyt500000gp/T/abs_03myqm7p6o/croot/six_1744271511946/work
+slicer==0.0.8
+sympy==1.13.1
+threadpoolctl==3.6.0
+torch==2.5.1
+torchaudio==2.5.1
+torchvision==0.22.0
+tqdm==4.67.1
+typing_extensions==4.14.0
+tzdata @ file:///croot/python-tzdata_1746123641790/work
+urllib3==2.4.0
