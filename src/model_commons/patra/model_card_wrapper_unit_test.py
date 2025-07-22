@@ -1,3 +1,4 @@
+import json
 import unittest
 
 import torch
@@ -166,10 +167,247 @@ class TestModelCardWrapperClass(unittest.TestCase):
 			model_card_wrapper.write_to_file(file_location=
 				"src/model_commons/patra/nfl_game_score_model_card_write_test.json")
 		except Exception as e:
-			self.fail(f"unexpected error: {e}")	
+			self.fail(f"unexpected error: {e}")
+
+	def test_get_name(self):
+		pmc_wrapper = get_model_card_with_ai_model()
+		try:
+			self.assertEqual(pmc_wrapper.get_name(), json_field(MODEL_CARD_JSON, "name"))
+		except Exception as e:
+			self.fail(f"❌ unexpected exception {e}")
+
+	def test_get_version(self):
+		pmc_wrapper = get_model_card_with_ai_model()
+		try:
+			self.assertEqual(pmc_wrapper.get_version(),json_field(MODEL_CARD_JSON, "version"))
+		except Exception as e:
+			self.fail(f"❌ unexpected exception: {e}")
+
+	def test_get_short_description(self):
+		pmc_wrapper = get_model_card_with_ai_model()
+		try:
+			self.assertEqual(pmc_wrapper.get_short_description(),
+				json_field(MODEL_CARD_JSON, "short_description"))
+		except Exception as e:
+			self.fail(f"❌ unexpected exception: {e}")
+
+	def test_get_full_description(self):
+		pmc_wrapper = get_model_card_with_ai_model()
+		try:
+			self.assertEqual(pmc_wrapper.get_full_description(),
+				json_field(MODEL_CARD_JSON, "full_description"))
+		except Exception as e:
+			self.fail(f"❌ unexpected exception: {e}")
+
+	def test_get_keywords(self):
+		pmc_wrapper = get_model_card_with_ai_model()
+		try:
+			self.assertEqual(pmc_wrapper.get_keywords(),
+				json_field(MODEL_CARD_JSON, "keywords"))
+		except Exception as e:
+			self.fail(f"❌ unexpected exception: {e}")
+
+	def test_get_author(self):
+		pmc_wrapper = get_model_card_with_ai_model()
+		try:
+			self.assertEqual(pmc_wrapper.get_author(),
+				json_field(MODEL_CARD_JSON, "author"))
+		except Exception as e:
+			self.fail(f"❌ unexpected exception: {e}")
 	
+	def test_get_input_type(self):
+		pmc_wrapper = get_model_card_with_ai_model()
+		try:
+			self.assertEqual(pmc_wrapper.get_input_type(),
+				json_field(MODEL_CARD_JSON, "input_type"))
+		except Exception as e:
+			self.fail(f"❌ unexpected exception: {e}")
+
+	def test_get_category(self):
+		pmc_wrapper = get_model_card_with_ai_model()
+		try:
+			self.assertEqual(pmc_wrapper.get_category(),
+				json_field(MODEL_CARD_JSON, "category"))
+		except Exception as e:
+			self.fial(f"❌ unexpected exception: {e}")
+
+	def test_get_input_data(self):
+		wrapper = get_model_card_with_ai_model()
+		try:
+			self.assertEqual(wrapper.get_input_data(),
+				json_field(MODEL_CARD_JSON, "input_data"))
+		except Exception as e:
+			self.fail(f"❌ unexpected exception: {e}")
+
+	def test_get_output_data(self):
+		wrapper = get_model_card_with_ai_model()
+		try:
+			self.assertEqual(wrapper.get_output_data(),
+				json_field(MODEL_CARD_JSON, "output_data"))
+		except Exception as e:
+			self.fail(f"❌ unexpected exception: {e}")
+
+	def test_get_foundational_model(self):
+		wrapper = get_model_card_with_ai_model()
+		try:
+			self.assertEqual(wrapper.get_foundational_model(),
+				json_field(MODEL_CARD_JSON, "foundational_model"))
+		except Exception as e:
+			self.fail(f"❌ unexpected exception: {e}")
+
+	def test_get_documentation(self):
+		wrapper = get_model_card_with_ai_model()
+		try:
+			self.assertEqual(wrapper.get_documentation(),
+				json_field(MODEL_CARD_JSON, "documentation"))
+		except Exception as e:
+			self.fail(f"❌ unexpected exception: {e}")
+
+	def test_get_ai_model_name(self):
+		wrapper = get_model_card_with_ai_model()
+		try:
+			self.assertEqual(wrapper.get_ai_model_name(),
+				json_field(AI_MODEL_CARD_JSON, "name"))
+		except Exception:
+			self.fail("❌ unexpected exception: {e}")
+
+	def test_get_ai_model_version(self):
+		wrapper = get_model_card_with_ai_model()
+		try:
+			self.assertEqual(wrapper.get_ai_model_version(),
+				json_field(AI_MODEL_CARD_JSON, "version"))
+		except Exception as e:
+			self.fail(f"❌ unexpected exception: {e}")
+
+	def test_get_ai_model_description(self):
+		wrapper = get_model_card_with_ai_model()
+		try:
+			self.assertEqual(wrapper.get_ai_model_description(),
+				json_field(AI_MODEL_CARD_JSON, "description"))
+		except Exception as e:
+			self.fail(f"❌ unexpected exception: {e}")
+
+	def test_get_ai_model_owner(self):
+		wrapper = get_model_card_with_ai_model()
+		try:
+			self.assertEqual(wrapper.get_ai_model_owner(),
+				json_field(AI_MODEL_CARD_JSON, "owner"))
+		except Exception as e:
+			self.fail(f"❌ unexpected exception: {e}")
+
+	def test_get_ai_model_location(self):
+		wrapper = get_model_card_with_ai_model()
+		try:
+			self.assertEqual(wrapper.get_ai_model_location(),
+				json_field(AI_MODEL_CARD_JSON, "location"))
+		except Exception as e:
+			self.fail(f"❌ unexpected exception: {e}")
+
+	def test_get_ai_model_license(self):
+		wrapper = get_model_card_with_ai_model()
+		try:
+			self.assertEqual(wrapper.get_ai_model_license(),
+				json_field(AI_MODEL_CARD_JSON, "license"))
+		except Exception as e:
+			self.fail(f"❌ unexpected exception: {e}")
+
+	def test_get_ai_model_framework(self):
+		wrapper = get_model_card_with_ai_model()
+		try:
+			self.assertEqual(wrapper.get_ai_model_framework(),
+				json_field(AI_MODEL_CARD_JSON, "framework"))
+		except Exception as e:
+			self.fail(f"❌ unexpected exception: {e}")
+
+	def test_get_ai_model_model_type(self):
+		wrapper = get_model_card_with_ai_model()
+		try:
+			self.assertEqual(wrapper.get_ai_model_model_type(),
+				json_field(AI_MODEL_CARD_JSON, "model_type"))
+		except Exception as e:
+			self.fail(f"❌ unexpected exception: {e}")
+
+	def test_get_ai_model_test_accuracy(self):
+		wrapper = get_model_card_with_ai_model()
+		try:
+			self.assertEqual(wrapper.get_ai_model_test_accuracy(),
+				json_field(AI_MODEL_CARD_JSON, "test_accuracy"))
+		except Exception as e:
+			self.fail(f"❌ unexpected exception: {e}")
+
+	def test_get_ai_model_metrics(self):
+		wrapper = get_model_card_with_ai_model()
+		metrics = {"Optimizer":"Adam", "mae":10.20810866355896}
+		wrapper.update_ai_model_metrics(metrics=metrics)
+		self.assertEqual(wrapper.get_ai_model_metrics(), metrics)
+
+	def test_update_ai_model_metrics_no_params(self):
+		wrapper = get_model_card_with_ai_model()
+		with self.assertRaises(ValueError):
+			wrapper.update_ai_model_metrics()
+
+	def test_update_ai_model_metrics_only_key(self):
+		wrapper = get_model_card_with_ai_model()
+		with self.assertRaises(ValueError):
+			wrapper.update_ai_model_metrics(key="test")
+
+	def test_update_ai_model_metrics_only_value(self):
+		wrapper = get_model_card_with_ai_model()
+		with self.assertRaises(ValueError):
+			wrapper.update_ai_model_metrics(value="test")
+
+	def test_update_ai_model_metrics_model_card_not_set(self):
+		with open(MODEL_CARD_JSON, "r") as file:
+			wrapper = ModelCardWrapper(inputs=json.load(file))
+		with self.assertRaises(ValueError):
+			wrapper.update_ai_model_metrics(key="test", value="test")
+
+	def test_update_ai_metrics_bad_metrics_type(self):
+		wrapper = get_model_card_with_ai_model()
+		with self.assertRaises(TypeError):
+			metrics = [1233,56774]
+			wrapper.update_ai_model_metrics(metrics=metrics)
+	
+	def test_update_ai_metrics_bad_key_type(self):
+		wrapper = get_model_card_with_ai_model()
+		with self.assertRaises(TypeError):
+			wrapper.update_ai_model_metrics(key=12445.6, value="good")
+
+	def test_update_ai_model_metrics_pass_metrics(self):
+		wrapper = get_model_card_with_ai_model()
+		try:
+			metrics = {"test":"test"}
+			wrapper.update_ai_model_metrics(metrics=metrics)
+			self.assertEqual(wrapper.get_ai_model_metrics(), metrics)
+		except Exception as e:
+			self.fail(f"❌ unexpected exception: {e}")
+
+	def test_update_ai_model_metrics_pass_key_value(self):
+		wrapper = get_model_card_with_ai_model()
+		try:
+			wrapper.update_ai_model_metrics(key="test", value="test_value")
+			self.assertEqual(wrapper.get_ai_model_metrics(), {"test":"test_value"})
+		except Exception as e:
+			self.fail(f"❌ unexpected exception: {e}")
+
+MODEL_CARD_JSON = "src/model_commons/patra/nfl_game_score_model_card_dict.json"
+
+AI_MODEL_CARD_JSON = "src/model_commons/patra/nfl_game_score_ai_model_dict.json"
+
 def get_model_card_wrapper() -> ModelCardWrapper:
-	return ModelCardWrapper(file_path="src/model_commons/patra/nfl_game_score_model_card_dict.json")
+	return ModelCardWrapper(file_path = MODEL_CARD_JSON)
+
+def json_field(file_path:str, field:str) -> str:
+	with open(file_path, "r") as file:
+		data = json.load(file)
+		if field in data.keys():
+			return data[field]
+		return None
+
+def get_model_card_with_ai_model() -> ModelCardWrapper:
+	pmc_wrapper = get_model_card_wrapper()
+	pmc_wrapper.update_ai_model(ai_model_wrapper=generic_ai_model_wrapper())
+	return pmc_wrapper
 
 def get_server_string() -> str:
 	return "http://patraserver.pods.icicleai.tapis.io"

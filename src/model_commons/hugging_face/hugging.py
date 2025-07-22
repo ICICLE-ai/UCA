@@ -1,4 +1,4 @@
-from huggingface_hub import HfApi, ModelCard, create_repo, delete_repo, hf_hub_download, login, snapshot_download
+from huggingface_hub import HfApi, ModelCard, ModelCardData, create_repo, delete_repo, hf_hub_download, login, snapshot_download
 
 from src.model_commons.patra.validator import Validator
 
@@ -263,3 +263,69 @@ class Hugging():
 
 		# writing model card
 		model_card.push_to_hub(repo_id)
+
+	@staticmethod
+	def generate_model_card(inputs:dict) -> ModelCard:
+		model_card_data = ModelCardData(
+			base_model = Hugging.get_from_dict(inputs, "base_model", None),
+			datasets = Hugging.get_from_dict(inputs, "datasets", None),
+			eval_results = Hugging.get_from_dict(inputs, "eval_results", None),
+			language = Hugging.get_from_dict(inputs, "language", None),
+			library_name = Hugging.get_from_dict(inputs, "library_name", None),
+			license = Hugging.get_from_dict(inputs, "license", None),
+			license_name = Hugging.get_from_dict(inputs, "license_name", None),
+			license_link = Hugging.get_from_dict(inputs, "license_link", None),
+			metrics = Hugging.get_from_dict(inputs, "metrics", None),
+			model_name = Hugging.get_from_dict(inputs, "model_name", None),
+			pipeline_tag = Hugging.get_from_dict(inputs, "pipeline_tag", None),
+			tags = Hugging.get_from_dict(inputs, "tags", None)
+		)
+		
+		model_card = ModelCard.from_template(
+			model_card_data,
+			developers = Hugging.get_from_dict(inputs, "developers"),
+			funded_by = Hugging.get_from_dict(inputs, "funded_by"),
+			shared_by = Hugging.get_from_dict(inputs, "shared_by"),
+			model_type = Hugging.get_from_dict(inputs, "model_type"),
+			language = Hugging.get_from_dict(inputs, "language"),
+			license = Hugging.get_from_dict(inputs, "license"),
+			base_model = Hugging.get_from_dict(inputs, "base_model"),
+			repo = Hugging.get_from_dict(inputs, "repo"),
+			paper = Hugging.get_from_dict(inputs, "paper"),
+			demo = Hugging.get_from_dict(inputs, "demo"),
+			direct_use = Hugging.get_from_dict(inputs, "direct_use"),
+			downstream_use = Hugging.get_from_dict(inputs, "downstream_use"),
+			out_of_scope_use = Hugging.get_from_dict(inputs, "out_of_scope_use"),
+			bias_risks_limitations = Hugging.get_from_dict(inputs, "bias_risk_limitations"),
+			bias_recommendations = Hugging.get_from_dict(inputs, "bias_recommendations"),
+			get_started_code = Hugging.get_from_dict(inputs, "get_start_code"),
+			training_data = Hugging.get_from_dict(inputs, "training_data"),
+			preprocessing = Hugging.get_from_dict(inputs, "preprocessing"),
+			training_regime = Hugging.get_from_dict(inputs, "training_regime"),
+			speeds_sizes_times = Hugging.get_from_dict(inputs, "speeds_sizes_times"),
+			testing_data = Hugging.get_from_dict(inputs, "testing_data"),
+			testing_factors = Hugging.get_from_dict(inputs, "testing_factors"),
+			testing_metrics = Hugging.get_from_dict(inputs, "testing_metrics"),
+			results = Hugging.get_from_dict(inputs, "results"),
+			results_summary = Hugging.get_from_dict(inputs, "results_summary"),
+			model_examination = Hugging.get_from_dict(inputs, "model_examination"),
+			hardware_type = Hugging.get_from_dict(inputs, "hardware_type"),
+			hours_used = Hugging.get_from_dict(inputs, "hours_used"),
+			cloud_provider = Hugging.get_from_dict(inputs, "cloud_provider"),
+			compute_region = Hugging.get_from_dict(inputs, "compute_region"),
+			co2_emitted = Hugging.get_from_dict(inputs, "co2_emitted"),
+			model_specs = Hugging.get_from_dict(inputs, "model_specs"),
+			compute_infrastructure = Hugging.get_from_dict(inputs, "compute_infrastructure"),
+			hardware_requirements = Hugging.get_from_dict(inputs, "hardware_requirements"),
+			software = Hugging.get_from_dict(inputs, "software"),
+			citation_bibtex = Hugging.get_from_dict(inputs, "citation_bibtex"),
+			citation_apa = Hugging.get_from_dict(inputs, "citation_apa"),
+			glossary = Hugging.get_from_dict(inputs, "glossary"),
+			model_card_authors = Hugging.get_from_dict(inputs, "model_card_authors"),
+			model_card_contact = Hugging.get_from_dict(inputs, "model_card_contact")
+		)
+		return model_card
+
+	@staticmethod
+	def get_from_dict(inputs:dict, key:str, default: str | None = "[More Information Needed]"):
+		return inputs[key] if key in inputs.keys() else default

@@ -8,7 +8,9 @@ from src.model_commons.patra.validator import Validator
 
 class ModelCardWrapper():
 	
-	def __init__(self, inputs:dict | None = None, model_card:ModelCard=None, file_path:str=""):
+	def __init__(self, inputs:dict | None = None, model_card: ModelCard | None =None,
+		file_path:str=""):
+		
 		# raise error if no parameters are given
 		if not inputs and not model_card and not file_path:
 			raise ValueError("no parameters were given")
@@ -28,8 +30,9 @@ class ModelCardWrapper():
 	def get_model_card(self) -> ModelCard:
 		return self.model_card
 
-	def update_ai_model(self, inputs:dict | None = None, ai_model:AIModel=None, file_path:str="",
-		ai_model_wrapper:AIModelWrapper=None):
+	def update_ai_model(self, inputs:dict | None = None, ai_model:AIModel | None = None,
+		file_path:str="", ai_model_wrapper:AIModelWrapper | None = None):
+		
 		# raise error if no parameters are given
 		if not inputs and not ai_model and not file_path and not ai_model_wrapper:
 			raise ValueError("no parameters were given")
@@ -173,6 +176,25 @@ class ModelCardWrapper():
 				column_names=column_names,
 				model=model)
 
+	def update_ai_model_metrics(self, metrics:dict | None = None, key:str | None = None,
+		value:str | None = None):
+		
+		# validation
+		if metrics is None and (key is None or value is None):
+			raise ValueError("🛑 expected a metrics dict or key value pair")
+
+		if self.model_card.ai_model is None:
+			raise ValueError("🛑 the ai_model is not set on the model card")
+
+		# setting values
+		if metrics is not None:
+			Validator.validate(metrics, "dict")
+			self.model_card.ai_model.metrics = metrics
+		else:
+			Validator.validate(key, "str")
+			Validator.validate(value, "str")
+			self.model_card.ai_model.add_metric(key, value)
+
 	def write_to_file(self, file_location:str):
 		# validating inputs
 		Validator.validate(file_location, "str")
@@ -198,3 +220,72 @@ class ModelCardWrapper():
 		else:
 			# used for public servers
 			return self.model_card.submit(patra_server_url=patra_server_url)
+
+	def get_name(self) -> str:
+		return self.model_card.name
+
+	def get_version(self) -> str:
+		return self.model_card.version
+
+	def get_short_description(self) -> str:
+		return self.model_card.short_description
+
+	def get_full_description(self) -> str:
+		return self.model_card.full_description
+
+	def get_keywords(self) -> str:
+		return self.model_card.keywords
+
+	def get_author(self) -> str:
+		return self.model_card.author
+
+	def get_input_type(self) -> str:
+		return self.model_card.input_type
+
+	def get_category(self) -> str:
+		return self.model_card.category
+
+	def get_input_data(self) -> str:
+		return self.model_card.input_data
+
+	def get_output_data(self) -> str:
+		return self.model_card.output_data
+
+	def get_foundational_model(self) -> str:
+		return self.model_card.foundational_model
+
+	def get_documentation(self) -> str:
+		return self.model_card.documentation
+
+	def get_ai_model_name(self) -> str:
+		return self.model_card.ai_model.name
+
+	def get_ai_model_version(self) -> str:
+		return self.model_card.ai_model.version
+
+	def get_ai_model_description(self) -> str:
+		return self.model_card.ai_model.description
+
+	def get_ai_model_owner(self) -> str:
+		return self.model_card.ai_model.owner
+
+	def get_ai_model_location(self) -> str:
+		return self.model_card.ai_model.location
+
+	def get_ai_model_license(self) -> str:
+		return self.model_card.ai_model.license
+
+	def get_ai_model_framework(self) -> str:
+		return self.model_card.ai_model.framework
+
+	def get_ai_model_model_type(self) -> str:
+		return self.model_card.ai_model.model_type
+
+	def get_ai_model_test_accuracy(self) -> str:
+		return self.model_card.ai_model.test_accuracy
+
+	def get_ai_model_model_structure(self) -> str:
+		return self.model_card.ai_model.model_structure
+
+	def get_ai_model_metrics(self) -> str:
+		return self.model_card.ai_model.metrics
