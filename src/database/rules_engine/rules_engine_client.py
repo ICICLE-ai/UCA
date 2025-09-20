@@ -74,7 +74,6 @@ class RuleEngineClient:
 
         data = rule_data.copy()
 
-        # Prefer claims passed from API; fall back to optional self.tapis claims if available
         token_claims = claims or {}
         if not token_claims and self.tapis and getattr(self.tapis, "access_token", None):
             token_claims = getattr(self.tapis.access_token, "claims", {}) or {}
@@ -103,8 +102,6 @@ class RuleEngineClient:
         for doc in cursor:
             doc.pop("_id", None)
             doc.pop("Model_Rules", None)
-            doc.pop("TapisToken", None)
-            doc.setdefault("TapisToken", None)
             doc.setdefault("Active_To", None)
             results.append(Rule(**doc))
         return results
@@ -123,8 +120,6 @@ class RuleEngineClient:
 
         doc.pop("_id", None)
         doc.pop("Model_Rules", None)
-        doc.pop("TapisToken", None)
-        doc.setdefault("TapisToken", None)
         doc.setdefault("Active_To", None)
 
         return Rule(**doc)

@@ -11,8 +11,5 @@ class Rule:
     Data_Rules: List[dict]
     Active_From: str
     Active_To: Optional[str]
-    TapisToken: str
     TAPIS_UUID: str
-    Tapis_UserName: str
-
-# TODO: Yet to narrow down final structure 
+    Tapis_UserName: str 
