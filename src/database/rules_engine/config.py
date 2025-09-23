@@ -1,7 +1,7 @@
 from pathlib import Path
 import yaml
 
-_CFG_PATH = Path("/UCA/config.yaml")
+_CFG_PATH = Path(__file__).resolve().parents[2] / "config.yaml"  
 
 if not _CFG_PATH.is_file():
     raise FileNotFoundError(
