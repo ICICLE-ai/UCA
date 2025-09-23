@@ -3,7 +3,6 @@ import unittest
 from colorama import Fore, Style, init
 
 from src.database.cyber_infra.cyber_infra_unit_test import TestCyberInfraClient
-from src.database.rules_engine.rules_engine_unit_test import TestRuleEngineClient
 from src.model_commons.hugging_face.hugging_unit_test import TestHuggingClass
 from src.model_commons.ml_hub.ml_hub_caller_unit_test import TestMLHubCallerClass
 from src.model_commons.patra.ai_model_wrapper_unit_test import TestAIModelWrapperClass

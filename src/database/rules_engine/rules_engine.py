@@ -2,7 +2,7 @@ from __future__ import annotations
 from typing import Any, Dict, List, Optional
 import requests
 
-from .config import Config  # 👈 reuse the same config loader
+from .config import Config
 
 
 class RulesEngine:
