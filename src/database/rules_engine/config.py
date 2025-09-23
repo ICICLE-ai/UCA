@@ -15,3 +15,6 @@ class Config:
     TAPIS_URL  = _req("tapis_url")
     TAPIS_USER = _cfg.get("tapis_user", "")
     TAPIS_PASS = _cfg.get("tapis_pass", "")
+    
+    # RulesEngine Admin server
+    BASE_URL   = _req("base_url")

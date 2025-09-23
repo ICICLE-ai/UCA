@@ -7,3 +7,19 @@ ignore = ["E203", "E501"]
 [tool.ruff.format]
 quote-style = "double"
 indent-style = "space"
+
+[build-system]
+requires = ["setuptools", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "database"
+version = "0.1.0"
+description = "Client for UCA Rules Engine"
+dependencies = [
+    "requests",
+    "pyyaml",
+]
+
+[tool.setuptools.packages.find]
+where = ["src"]

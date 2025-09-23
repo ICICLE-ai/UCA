@@ -4,3 +4,6 @@ rules_db: "IMT_Rules_engine_database"
 
 # Tapis creds
 tapis_url: "https://tacc.tapis.io"
+
+# Rules Engine Admin
+base_url: "http://127.0.0.1:8081"
