@@ -1,7 +1,8 @@
-from pathlib import Path
+from importlib import resources
 import yaml
 
-_CFG_PATH = Path(__file__).resolve().parents[2] / "config.yaml"  
+with resources.files("database.rules_engine").joinpath("config.yaml").open("r") as f:
+    _CFG_PATH = yaml.safe_load(f) or {} 
 
 if not _CFG_PATH.is_file():
     raise FileNotFoundError(
