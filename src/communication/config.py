@@ -7,6 +7,7 @@ class KafkaConfig:
         },
         'staging': {
             'bootstrap.servers': 'icicle-uca-dev-1.tacc.cloud:9094',
+            'group.id': 'local-test-group',
             'security.protocol': 'SSL',
             'ssl.endpoint.identification.algorithm': 'none',
             'enable.ssl.certificate.verification': False

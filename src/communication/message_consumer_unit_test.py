@@ -8,12 +8,12 @@ def handle_message(message: str):
 
 class TestMessageConsumer(unittest.TestCase):
     def setUp(self):
-        self.topic = 'test-topic'
-        self.env = 'local'
+        self.topic = 'test'
+        self.env = 'staging'
         self.consumer = MessageConsumer(self.topic, self.env)
 
     def test_on_message(self):
-        @self.consumer.on_message()
+        @self.consumer.on_message
         def process_message(message: str):
             print(f"Processed message: {message}")
 
